@@ -1,0 +1,82 @@
+First, create a google sign-in page for this website, that loads when the user clicks the sign in button. After the user signs in, send them to another page where all of the modules will be located. 
+
+This is the prompt for the first module. Create what the descriptions describe, and have a button on the module page that allows the user to enter the first module.
+
+Introduction
+Text: You were taught that $a^2 + b^2 = c^2$ is a triangle formula. You were lied to.
+The user clicks the next button
+A dark background and a subtle, sleek, white coordinate grid fades into picture.
+Text says: The pythagorean theorem isn't just a formula to plug numbers into for school tests. It is a fundamental law of geometry and space itself. 
+A moveable point appears on the axis. Connect the point to the x axis, and connect the horizontal distance between the origin and the point. The horizontal leg is labelled “a”, the vertical leg is labelled “b”, and the hypotenuse is labelled “c”
+The user can freely drag the top vertex of the triangle. As they move it, the triangle stretches and shrinks. 
+Text elements next to the grid track the lengths in real-time. One tracks the length of a, another tracks the length of b, and another tracks the length of c. A large readout shows:
+a^2+b^2=c^2, and on another line, has the true values for the equation, showing how it always holds true.
+Text appears, reading “But how did we discover this law?”
+
+Tile Visual 
+On-Screen Text
+The Mediterranean Courtyard.
+Ancient Greeks noticed this rule embedded in everyday tile floors. Look at these special right triangles. 
+USE THE ATTACHED FILE image_1 as reference for this section, but change the colors to greek blue and white.
+Visuals & Interactions
+The coordinate grid fades into a background pattern of a tiled floor made of repeating, alternating colored, blue and white isosceles right triangles. A single central right triangle lights up with a soft outline to grab the user's attention. 
+Text:Take a look at this these right triangles:
+After a brief pause, squares outline themselves outward from each of the three sides of this central triangle.
+A next button appears. When the user clicks next, the individual triangular tiles contained within the two smaller side squares detach. The user is able to drag and drop the triangular tiles to fill the c^2 square.
+Text says: The area of the two smaller suares is exactly equal to the area of the larger square. The area of each square is the square of its side length, so this is just one case of our pythagorean theorem, a^2+b^2=c^2. 
+In this special case, no algebra or formulas are required. The law reveals itself just by counting the tiles of the floor.
+
+Geometric Proof:
+On-Screen Text
+Counting tiles is neat, but how do we prove that this law holds true if we change the triangle's proportions entirely? 
+USE the attached file image_2 as reference for this section.
+Step by step explanation
+The tile floor fades out, leaving a clean minimalist background. A single right triangle with side lengths labelled a, b, and c slides into the center. The user clicks a next button that appears.
+The single triangle duplicates into four identical copies. These four triangles smoothly slide and rotate until their outer edges form one large bounding square, leaving a empty square tilted in the very center. Notice, the space in the middle must be a square. The angles are labelled, and it is shown how the angle in the square must be 90 degrees. The text updates: Since it is a square, the empty space in the center has an area of c^2.
+The user clicks next again. The square smoothly splits into two identical side-by-side suares. The left square keeps the original layout frozen in place. In the square on the right, the individual triangles detach from the larger square, and rotate and translate to their individual spots like in. This shift reveals two new empty square spaces with sidelengths a and b,  labeled a^2 and b^2.
+The final text fades in at the bottom:We didn't add or remove anything. We just slid the pieces around inside the exact same boundary. Because the total area of the triangles didn't change, the leftover 'empty' space has to be identical in both setups. Therefore, c^2 is equal to a^2 + b^2.
+A side length slider appears. When the user adjusts it, the triangles in both windows resize simultaneously, demonstrating that the layout logic and geometric spacing hold true for any proportions.
+
+
+
+
+On-Screen Text
+If that geometric proof wasn’t enough, we can also take an algebraic approach. 
+Use the attached file image_3 for as reference for this section.
+The comparison view collapses back into a single focused image of the original layout: the large outer square with the four triangles and the empty c^2 center.
+As the text describes the dimensions, specific parts of the geometric graphic flash or highlight to match the words. First, the outer edge of the large square lights up, showing the combined length of a + b. The text reads: The big square on the outside has a side length of a + b, meaning its total area is (a + b)^2. Expanding this expression gives us a^2 + 2ab + b^2.
+Next, the inner shapes highlight sequentially: first the central square, then each of the four surrounding triangles. The text reads: We can also find the total area by adding the inner shapes together. The inner square has an area of c^2. If we isolate one triangle, its area is base times height divided by two, or ab/2. Since there are four of them, their combined area sums up to 2ab. Adding the inner square and the four triangles together gives us an area expression of c^2 + 2ab.
+The two separate algebraic expressions slide toward the center of the screen and an equals sign snaps into place between them. The text reads: Because both expressions represent the area of the exact same square, we can equate them: a^2 + 2ab + b^2 = 2ab + c^2.
+An animation draws a red strike-through line directly across the 2ab term on both sides of the equation. The 2ab terms fade away, and the remaining characters slide together tightly to display the clean conclusion: a^2 + b^2 = c^2.
+
+There are hundreds of ways to prove the pythagorean theorem. While we won’t go over any more in this module, my point is that this theorem works. It's not just a random rule that school tests you on, it's a fundamental law of geometry, mathematics, and of our world itself.
+How it appears everywhere in math
+But why is the pythagorean theorem so important in mathematics?
+                                                   
+
+Distance formula:
+The workspace resets back to the original dark background and coordinate grid. Two moveable points drop onto the grid, labeled with coordinates (x1, y1) and (x2, y2). The user can drag either point around the plane.
+The user clicks the next button. A straight line draws itself directly between the two coordinates, labeled d for distance. From the starting coordinates, a horizontal dashed line extends along the x-interval and a vertical dashed line drops down along the y-interval, meeting at a 90-degree corner to complete a right triangle beneath the distance line.
+The text updates: The horizontal distance between the two points is just the difference between their x coordinates, (x2 - x1). The vertical distance is the difference between their y coordinates, (y2 - y1).
+The symbols (x2 - x1) and (y2 - y1) slide from the text panel and attach themselves directly onto the horizontal and vertical legs of the triangle on the grid. At the bottom of the screen, the static template equation x^2 + y^2 = d^2 appears, and the real coordinate numbers plug themselves into it dynamically as the user moves the points.
+The final text reads: If we draw these lines, it is clear that finding the straight-line distance between these two points boils down to finding the length of the hypotenuse of this triangle. Applying the theorem to these two legs gives us d^2 = (x2 - x1)^2 + (y2 - y1)^2. If we square root both sides to isolate the distance, we get the standard distance formula. This approach works for any two points in space.
+
+
+
+
+Circle formula:
+The Pythagorean theorem is also closely related to circles. Mathematically, a circle is just every point that is a set distance away from a center point. How would we write an equation describing all points that have a distance r, from a certain point?
+
+The screen transitions to a fresh coordinate grid. A movable center point appears on the grid labeled (x1, y1). A perfect circle outlines itself around this point. A solid radius line segment connects the center to a moveable point on the perimeter labeled (x2, y2). When the user drags the center point, the entire circle shifts. When the user drags the perimeter point, the radius line rotates smoothly around the center.
+The text updates: Let's use the distance formula we derived earlier: d = square root of ((x2 - x1)^2 + (y2 - y1)^2). Since we want the distance from one single point to be constant, let's set d to be any arbitrary constant value, let's say 5.
+The general distance formula fades onto the screen directly above the graph. The character d changes into the number 5, while the label on the physical radius line on the graph also switches from r to 5. The equation now reads: 5 = square root of ((x2 - x1)^2 + (y2 - y1)^2).
+The text updates: Now, if we fix our “center point” (x1,y1) to be constants, lets say (2,3), every point (x2,y2) that satisfies this equation must be on the circle of radius 5 centered at 2,3.
+On the graph, the center point slides cleanly to the position (2, 3). In the equation, the variables x1 and y1 fade out, and the numbers 2 and 3 slide into their empty slots inside the brackets. The equation updates to: 5 = square root of ((x2 - 2)^2 + (y2 - 3)^2).
+The text updates: To simplify this and remove the radical, we square both sides. We can also change x2 and y2 to standard x and y, since this applies to any general point on the boundary.
+In the animation, the large square root symbol vanishes. Also, a superscript 2 slides onto the left side to turn the 5 into 5^2. The small 2 subscripts on the x and y variables shrink and disappear. The line reorganizes into: 5^2 = (x - 2)^2 + (y - 3)^2.
+A dashed right triangle projects itself inside the circle, spanning between the center (2, 3) and the perimeter point (x, y). The expression (x - 2) slides from the equation and labels the horizontal leg, the expression (y - 3) slides down to label the vertical leg, and the number 5 labels the hypotenuse.
+The final text concludes: We have just derived the equation for a circle centered at (2, 3) with a radius of 5. To generalize this to any center coordinate (h, k) and any radius r, the equation takes the standard form: (x - h)^2 + (y - k)^2 = r^2. The equation of a circle is simply the distance formula with a fixed radius, and the distance formula is simply the Pythagorean theorem in disguise.
+At the very bottom of the screen, the classic equation a^2 + b^2 = c^2 fades in directly beneath the general circle formula. Brackets smoothly draw themselves around the terms to align them vertically, showing that (x - h)^2 maps to a^2, (y - k)^2 maps to b^2, and r^2 maps to c^2.
+
+
+
