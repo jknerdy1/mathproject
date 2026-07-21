@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { DerivativeDemo } from '@/components/DerivativeDemo';
 import { 
   Telescope, 
@@ -25,6 +25,7 @@ const FadeIn = ({ children, delay = 0, className = "" }: { children: React.React
 );
 
 export default function Home() {
+  const [, navigate] = useLocation();
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-primary/30 selection:text-primary-foreground">
       {/* Navigation */}
@@ -40,7 +41,7 @@ export default function Home() {
           <a href="#demo" className="hover:text-white transition-colors py-2">Interactive Demo</a>
           <a href="#curriculum" className="hover:text-white transition-colors py-2">Curriculum</a>
         </div>
-        <button className="bg-white/10 hover:bg-white/20 px-6 py-2.5 rounded-full text-sm font-semibold transition-all backdrop-blur-sm border border-white/5">
+        <button onClick={() => navigate('/sign-in')} className="bg-white/10 hover:bg-white/20 px-6 py-2.5 rounded-full text-sm font-semibold transition-all backdrop-blur-sm border border-white/5">
           Sign In
         </button>
       </nav>
@@ -70,7 +71,7 @@ export default function Home() {
             Guided discovery for the curious student who wants to know <i className="text-white">why</i> it works.
           </p>
           <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-            <button className="bg-primary hover:bg-primary/90 text-white px-10 py-5 rounded-full font-bold text-lg transition-transform hover:scale-105 flex items-center justify-center gap-3 drop-shadow-[0_0_25px_hsla(250,85%,65%,0.5)] w-full sm:w-auto">
+            <button onClick={() => navigate('/sign-up')} className="bg-primary hover:bg-primary/90 text-white px-10 py-5 rounded-full font-bold text-lg transition-transform hover:scale-105 flex items-center justify-center gap-3 drop-shadow-[0_0_25px_hsla(250,85%,65%,0.5)] w-full sm:w-auto">
               Start Your Adventure
               <ArrowRight size={22} />
             </button>
@@ -195,8 +196,8 @@ export default function Home() {
                 Our modules don't just teach you the mechanics. They teach you the context. When you understand the historical problem they were trying to solve, the solution suddenly makes perfect sense.
               </p>
             </div>
-            <button className="mt-10 flex items-center gap-3 text-primary font-bold text-lg hover:text-white transition-colors group">
-              Read our teaching philosophy 
+            <button onClick={() => navigate('/sign-up')} className="mt-10 flex items-center gap-3 text-primary font-bold text-lg hover:text-white transition-colors group">
+              Start exploring
               <ArrowRight className="group-hover:translate-x-2 transition-transform" />
             </button>
           </FadeIn>
@@ -271,7 +272,7 @@ export default function Home() {
             <p className="text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
               Join thousands of students who have discovered the profound beauty of true mathematical understanding.
             </p>
-            <button className="bg-white text-background hover:bg-gray-100 px-12 py-6 rounded-full font-bold text-xl transition-transform hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.3)]">
+            <button onClick={() => navigate('/sign-up')} className="bg-white text-background hover:bg-gray-100 px-12 py-6 rounded-full font-bold text-xl transition-transform hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.3)]">
               Create Your Free Account
             </button>
             <p className="mt-8 text-muted-foreground">No credit card required. Start exploring the first module instantly.</p>
