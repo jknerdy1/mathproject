@@ -1,0 +1,32 @@
+# Homepage Design Fix Prompt for Replit Agent
+
+## Scope — read this first
+This prompt only refines the layout and visual hierarchy of the existing homepage (the modules-grid page). Do not touch: individual module pages/content, the About page, sign-in logic/functionality, or the color palette — the palette is good and should stay as-is. This is a structural/typographic polish pass, not a redesign of the color system.
+
+Site name: keep using "Website Name" as the placeholder everywhere. Do not invent a real name.
+
+## Fix 1: Remove duplicate title hierarchy
+Right now "Website Name" appears twice in the same viewport — once as a small nav wordmark (top-left) and again as a giant hero heading directly below it. This reads as a bug/repetition, not intentional design. Fix by choosing ONE primary heading moment:
+- Keep the small wordmark in the nav (left-aligned, as-is) for wayfinding.
+- Remove the redundant giant "Website Name" hero heading. Replace it with just the tagline ("interactive math for curious students") as the hero text, OR keep a hero heading but make it clearly secondary in role — e.g. smaller, or reworded so it's not an exact repeat of the nav text.
+
+## Fix 2: Center the hero content
+Reference: neal.fun's homepage centers its entire hero block (title + subtitle) in a centered column, not left-aligned like a typical SaaS landing page. Update the hero section (whatever remains after Fix 1) to be center-aligned horizontally, matching that centered, editorial feel rather than a left-aligned marketing-page layout.
+
+## Fix 3: Fix the broken "Coming Soon" tile state
+The Euler's Identity tile currently shows visible ghost/bleed-through text behind the "COMING SOON" pill — this looks like a rendering bug. Design ONE consistent "coming soon" empty-state treatment and apply it uniformly to every unreleased module tile:
+- The pill/badge should sit cleanly on top of a muted background with no overlapping or bleeding text/graphics behind it.
+- Consider dropping opacity on the tile's decorative illustration (e.g. 30-40%) so it reads as "preview, not yet interactive" rather than fully rendering content behind the badge.
+- Keep typography/label placement (category + title) identical in position and style across all tiles, released or not.
+
+## Fix 4: Equalize card structure across the grid
+Cards currently have inconsistent heights and inconsistent amounts of visual content (Tile 1 has a full illustration; Tiles 2-3 have sparse line art and empty space). Fix:
+- All cards in a row must be equal height, with the illustration area and footer/label area proportioned identically across every card (e.g. illustration area = fixed aspect ratio or fixed height, footer band = fixed height).
+- Give "coming soon" tiles a real, simple illustration (even minimal line art) that fills the same illustration area proportionally as the released tile, rather than leaving mostly empty space around a small icon.
+- Maintain consistent gutter spacing and card corner-radius across the entire grid.
+
+## Fix 5: Unify typography
+The hero subtitle currently appears to use a different font family (looks serif/italic) than the bold display heading. Use a single type family throughout the homepage, varying only weight and size for hierarchy (e.g. bold/large for headings, regular/smaller for body and subtitle text) — this is core to neal.fun's clean, cohesive feel.
+
+## General principle to apply throughout
+Every visual choice on this page should follow consistent, repeatable rules (same card proportions, same type family, same spacing scale) rather than one-off styling per element. Consistency across repeated elements (nav, cards, badges) is what makes a grid-based homepage like this feel clean instead of assembled piecemeal.

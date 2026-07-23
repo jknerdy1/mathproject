@@ -1,75 +1,50 @@
 import React from "react";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { SiteNav } from "@/components/SiteNav";
-import { Show } from "@clerk/react";
 
-/* ─── Tile art components — one SVG illustration per module ─── */
+/* ─────────────────────────────────────────────
+   Tile illustration components
+   Each fills 100% of its container (width + height).
+   Font: Space Grotesk only — no serif fallbacks.
+───────────────────────────────────────────── */
 
 function PythagoreanArt() {
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        background: "#ddeeff",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
+    <div style={{ width: "100%", height: "100%", background: "#ddeeff", position: "relative", overflow: "hidden" }}>
       {/* graph-paper grid */}
-      <svg
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <pattern id="pyth-grid" width="20" height="20" patternUnits="userSpaceOnUse">
             <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#b8d0e8" strokeWidth="0.7" />
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
+        <rect width="100%" height="100%" fill="url(#pyth-grid)" />
       </svg>
 
-      {/* Geometric construction */}
+      {/* Geometric proof — fills viewBox 0 0 300 180 */}
       <svg
-        viewBox="0 0 220 150"
+        viewBox="0 0 300 180"
+        preserveAspectRatio="xMidYMid meet"
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Square on side a (bottom) */}
-        <rect x="40" y="95" width="60" height="60" fill="#FFCA8A" fillOpacity="0.7" stroke="#c8883a" strokeWidth="1.5" />
-        {/* Square on side b (right) */}
-        <rect x="100" y="35" width="40" height="60" fill="#FFB69E" fillOpacity="0.7" stroke="#c86040" strokeWidth="1.5" />
+        {/* Square on a (bottom) */}
+        <rect x="60" y="100" width="80" height="80" fill="#FFCA8A" fillOpacity="0.7" stroke="#c8883a" strokeWidth="1.5" />
+        {/* Square on b (right) */}
+        <rect x="140" y="40" width="55" height="60" fill="#FFB69E" fillOpacity="0.7" stroke="#c86040" strokeWidth="1.5" />
         {/* Square on hypotenuse */}
-        <polygon
-          points="40,35 100,35 100,95 40,95"
-          fill="#F0FB9B"
-          fillOpacity="0.75"
-          stroke="#8a8a20"
-          strokeWidth="1.5"
-        />
-        {/* Triangle — the star */}
-        <polygon
-          points="40,95 100,95 100,35"
-          fill="#5588bb"
-          fillOpacity="0.85"
-          stroke="#1a4488"
-          strokeWidth="2"
-          strokeLinejoin="round"
-        />
-        {/* Right angle mark */}
-        <polyline
-          points="92,95 92,87 100,87"
-          fill="none"
-          stroke="#1a4488"
-          strokeWidth="1.5"
-        />
+        <polygon points="60,40 140,40 140,100 60,100" fill="#F0FB9B" fillOpacity="0.8" stroke="#8a8a20" strokeWidth="1.5" />
+        {/* Triangle */}
+        <polygon points="60,100 140,100 140,40" fill="#5588bb" fillOpacity="0.9" stroke="#1a4488" strokeWidth="2" strokeLinejoin="round" />
+        {/* Right-angle mark */}
+        <polyline points="130,100 130,90 140,90" fill="none" stroke="#1a4488" strokeWidth="1.5" />
         {/* Labels */}
-        <text x="70" y="132" textAnchor="middle" fontSize="13" fontWeight="700" fill="#884422" fontFamily="Georgia,serif">a²</text>
-        <text x="121" y="70" textAnchor="middle" fontSize="13" fontWeight="700" fill="#882222" fontFamily="Georgia,serif">b²</text>
-        <text x="65" y="70" textAnchor="middle" fontSize="13" fontWeight="700" fill="#666600" fontFamily="Georgia,serif">c²</text>
-        {/* Formula */}
-        <text x="175" y="140" textAnchor="end" fontSize="11" fill="#1a4488" fontFamily="Georgia,serif" fontStyle="italic">
+        <text x="100" y="148" textAnchor="middle" fontSize="14" fontWeight="700" fill="#884422" fontFamily="'Space Grotesk', sans-serif">a²</text>
+        <text x="169" y="76"  textAnchor="middle" fontSize="14" fontWeight="700" fill="#882222" fontFamily="'Space Grotesk', sans-serif">b²</text>
+        <text x="92"  y="76"  textAnchor="middle" fontSize="14" fontWeight="700" fill="#666600" fontFamily="'Space Grotesk', sans-serif">c²</text>
+        {/* Formula watermark */}
+        <text x="240" y="170" textAnchor="end" fontSize="11" fontWeight="600" fill="#1a4488" fontFamily="'Space Grotesk', sans-serif" opacity="0.7">
           a² + b² = c²
         </text>
       </svg>
@@ -79,20 +54,38 @@ function PythagoreanArt() {
 
 function DerivativeArt() {
   return (
-    <div style={{ width: "100%", height: "100%", background: "#f5f0fa", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
-      <svg viewBox="0 0 200 130" style={{ width: "90%", height: "90%" }} xmlns="http://www.w3.org/2000/svg">
+    <div style={{ width: "100%", height: "100%", background: "#f0ecfa", position: "relative", overflow: "hidden" }}>
+      <svg
+        viewBox="0 0 300 180"
+        preserveAspectRatio="xMidYMid meet"
+        style={{ width: "100%", height: "100%" }}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Light grid */}
+        <defs>
+          <pattern id="deriv-grid" width="30" height="30" patternUnits="userSpaceOnUse">
+            <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#d8ccee" strokeWidth="0.6" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#deriv-grid)" />
         {/* Axes */}
-        <line x1="20" y1="110" x2="180" y2="110" stroke="#bbb" strokeWidth="1.5" />
-        <line x1="20" y1="20" x2="20" y2="110" stroke="#bbb" strokeWidth="1.5" />
-        {/* Parabola */}
-        <path d="M 30,105 Q 100,10 170,60" fill="none" stroke="#9966cc" strokeWidth="2.5" strokeLinecap="round" />
-        {/* Tangent line */}
-        <line x1="60" y1="100" x2="140" y2="30" stroke="#cc6688" strokeWidth="1.5" strokeDasharray="4 3" />
+        <line x1="30" y1="155" x2="270" y2="155" stroke="#9977cc" strokeWidth="1.5" strokeOpacity="0.5" />
+        <line x1="30" y1="20"  x2="30"  y2="155" stroke="#9977cc" strokeWidth="1.5" strokeOpacity="0.5" />
+        {/* Arrowheads */}
+        <polygon points="270,152 278,155 270,158" fill="#9977cc" opacity="0.5" />
+        <polygon points="27,20 30,12 33,20" fill="#9977cc" opacity="0.5" />
+        {/* Smooth curve */}
+        <path d="M 40,145 C 80,140 120,50 160,40 S 230,70 265,100" fill="none" stroke="#7744bb" strokeWidth="3" strokeLinecap="round" />
+        {/* Secant / tangent line */}
+        <line x1="80" y1="148" x2="240" y2="28" stroke="#cc5588" strokeWidth="1.8" strokeDasharray="6 4" />
         {/* Point on curve */}
-        <circle cx="100" cy="35" r="5" fill="#9966cc" />
-        <circle cx="100" cy="35" r="3" fill="white" />
-        {/* Label */}
-        <text x="100" y="125" textAnchor="middle" fontSize="11" fill="#9966cc" fontFamily="Georgia,serif" fontStyle="italic">f′(x)</text>
+        <circle cx="160" cy="40" r="6" fill="#7744bb" />
+        <circle cx="160" cy="40" r="3.5" fill="white" />
+        {/* Labels */}
+        <text x="158" y="24" textAnchor="middle" fontSize="11" fontWeight="700" fill="#7744bb" fontFamily="'Space Grotesk', sans-serif">P</text>
+        <text x="248" y="24" textAnchor="start" fontSize="11" fontWeight="600" fill="#cc5588" fontFamily="'Space Grotesk', sans-serif">f ′(x)</text>
+        <text x="264" y="170" textAnchor="end" fontSize="11" fontWeight="600" fill="#9977cc" fontFamily="'Space Grotesk', sans-serif" opacity="0.7">x</text>
+        <text x="44" y="18" textAnchor="start" fontSize="11" fontWeight="600" fill="#9977cc" fontFamily="'Space Grotesk', sans-serif" opacity="0.7">f(x)</text>
       </svg>
     </div>
   );
@@ -100,16 +93,33 @@ function DerivativeArt() {
 
 function EulerArt() {
   return (
-    <div style={{ width: "100%", height: "100%", background: "#1a1f2e", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <svg viewBox="0 0 200 100" style={{ width: "90%" }} xmlns="http://www.w3.org/2000/svg">
-        <text x="100" y="65" textAnchor="middle" fontSize="28" fontFamily="Georgia,serif" fontStyle="italic" fill="#d4c07a" letterSpacing="-1">
+    <div style={{ width: "100%", height: "100%", background: "#1a1f2e", position: "relative", overflow: "hidden" }}>
+      {/* Subtle concentric circles */}
+      <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} xmlns="http://www.w3.org/2000/svg">
+        <circle cx="150" cy="90" r="50"  fill="none" stroke="#2d3a55" strokeWidth="1" />
+        <circle cx="150" cy="90" r="80"  fill="none" stroke="#2d3a55" strokeWidth="1" />
+        <circle cx="150" cy="90" r="110" fill="none" stroke="#2d3a55" strokeWidth="1" />
+      </svg>
+      {/* Identity formula */}
+      <svg
+        viewBox="0 0 300 180"
+        preserveAspectRatio="xMidYMid meet"
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {/* Main formula */}
+        <text x="150" y="108" textAnchor="middle" fontSize="44" fontWeight="800" fill="#d4c07a" fontFamily="'Space Grotesk', sans-serif" letterSpacing="-2">
           e
         </text>
-        <text x="126" y="48" textAnchor="start" fontSize="14" fontFamily="Georgia,serif" fontStyle="italic" fill="#aac4e8">
+        <text x="180" y="84"  textAnchor="start"  fontSize="20" fontWeight="700" fill="#aac4e8" fontFamily="'Space Grotesk', sans-serif">
           iπ
         </text>
-        <text x="138" y="65" textAnchor="start" fontSize="28" fontFamily="Georgia,serif" fill="#e0d0a0">
-          +1 = 0
+        <text x="196" y="108" textAnchor="start"  fontSize="44" fontWeight="800" fill="#e0d4a8" fontFamily="'Space Grotesk', sans-serif" letterSpacing="-2">
+          +1=0
+        </text>
+        {/* Caption */}
+        <text x="150" y="155" textAnchor="middle" fontSize="11" fontWeight="500" fill="#7a8aaa" fontFamily="'Space Grotesk', sans-serif">
+          Euler's Identity
         </text>
       </svg>
     </div>
@@ -117,37 +127,50 @@ function EulerArt() {
 }
 
 function PrimesArt() {
-  const primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47];
-  const all = Array.from({ length: 48 }, (_, i) => i + 2);
+  const primes = new Set([2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71]);
+  const nums = Array.from({ length: 72 }, (_, i) => i + 2);
   return (
-    <div style={{ width: "100%", height: "100%", background: "#fff8f2", display: "flex", alignItems: "center", justifyContent: "center", padding: "8px" }}>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", maxWidth: "200px" }}>
-        {all.map((n) => (
-          <div
-            key={n}
-            style={{
-              width: "22px",
-              height: "22px",
-              borderRadius: "4px",
-              background: primes.includes(n) ? "#e84040" : "#eee",
-              color: primes.includes(n) ? "#fff" : "#999",
-              fontSize: "9px",
-              fontWeight: 700,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontFamily: "monospace",
-            }}
-          >
-            {n}
-          </div>
-        ))}
-      </div>
+    <div style={{ width: "100%", height: "100%", background: "#fff8f2", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <svg
+        viewBox="0 0 300 180"
+        preserveAspectRatio="xMidYMid meet"
+        style={{ width: "100%", height: "100%" }}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        {nums.map((n, i) => {
+          const col = i % 12;
+          const row = Math.floor(i / 12);
+          const x = 14 + col * 23;
+          const y = 14 + row * 30;
+          const isPrime = primes.has(n);
+          return (
+            <g key={n}>
+              <rect
+                x={x} y={y} width="19" height="19"
+                rx="3"
+                fill={isPrime ? "#e84040" : "#eeebe8"}
+              />
+              <text
+                x={x + 9.5} y={y + 13}
+                textAnchor="middle"
+                fontSize="8"
+                fontWeight={isPrime ? "700" : "500"}
+                fill={isPrime ? "#fff" : "#aaa"}
+                fontFamily="'Space Grotesk', sans-serif"
+              >
+                {n}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
     </div>
   );
 }
 
-/* ─── Module data ─── */
+/* ─────────────────────────────────────────────
+   Module data
+───────────────────────────────────────────── */
 
 const MODULES = [
   {
@@ -155,11 +178,11 @@ const MODULES = [
     title: "The Pythagorean Theorem",
     category: "Geometry",
     time: "25 min",
-    href: "/modules/pythagorean",
+    href: "/modules/pythagorean" as string | null,
     art: <PythagoreanArt />,
     available: true,
     tileBg: "#eef5fc",
-    tileFooterBg: "#e4f0fb",
+    footerBg: "#e4f0fb",
     border: "#b8d0e8",
     titleColor: "#1a3a5c",
     catColor: "#3a6898",
@@ -173,7 +196,7 @@ const MODULES = [
     art: <DerivativeArt />,
     available: false,
     tileBg: "#f5f0fa",
-    tileFooterBg: "#ede8f5",
+    footerBg: "#ede8f5",
     border: "#c8b8e8",
     titleColor: "#3a1a5c",
     catColor: "#7755aa",
@@ -187,7 +210,7 @@ const MODULES = [
     art: <EulerArt />,
     available: false,
     tileBg: "#1a1f2e",
-    tileFooterBg: "#1e2438",
+    footerBg: "#1e2438",
     border: "#3a4060",
     titleColor: "#d4c07a",
     catColor: "#7a8aaa",
@@ -201,18 +224,44 @@ const MODULES = [
     art: <PrimesArt />,
     available: false,
     tileBg: "#fff8f2",
-    tileFooterBg: "#fdf0e8",
+    footerBg: "#fdf0e8",
     border: "#e0c8b0",
     titleColor: "#4a1a0a",
     catColor: "#883820",
   },
-] as const;
+];
 
-/* ─── Page ─── */
+/* ─────────────────────────────────────────────
+   Coming-soon overlay — dimmed art + clean pill
+   Applies a 0.25 opacity wrapper over the art,
+   then a centered pill at full opacity on top.
+   Works identically for light and dark bg tiles.
+───────────────────────────────────────────── */
+
+const PILL_STYLE: React.CSSProperties = {
+  background: "rgba(255,255,255,0.92)",
+  border: "1.5px solid rgba(0,0,0,0.12)",
+  borderRadius: "999px",
+  padding: "5px 16px",
+  fontSize: "0.7rem",
+  fontWeight: 700,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+  color: "#5a4a38",
+  fontFamily: "'Space Grotesk', sans-serif",
+  whiteSpace: "nowrap",
+};
+
+/* Fixed illustration area height — all tiles identical */
+const ART_HEIGHT = 178;
+/* Footer band height — fixed so every card is the same total height */
+const FOOTER_PADDING = "14px 16px";
+
+/* ─────────────────────────────────────────────
+   Page
+───────────────────────────────────────────── */
 
 export default function Modules() {
-  const [, navigate] = useLocation();
-
   return (
     <div
       style={{
@@ -224,88 +273,95 @@ export default function Modules() {
     >
       <SiteNav />
 
-      <main style={{ maxWidth: "980px", margin: "0 auto", padding: "48px 24px 96px" }}>
-        {/* Header */}
+      <main style={{ maxWidth: "980px", margin: "0 auto", padding: "40px 24px 96px" }}>
+
+        {/* ── Hero — centered, tagline only, no duplicate wordmark ── */}
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
-          style={{ marginBottom: "40px" }}
+          style={{ textAlign: "center", marginBottom: "40px" }}
         >
-          <h1
+          <p
             style={{
-              fontWeight: 800,
-              fontSize: "clamp(2rem, 5vw, 3rem)",
-              letterSpacing: "-0.04em",
-              color: "var(--site-text)",
-              marginBottom: "6px",
-              lineHeight: 1.1,
+              fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
+              fontWeight: 500,
+              color: "var(--site-text-muted)",
+              letterSpacing: "-0.01em",
             }}
           >
-            Website Name
-          </h1>
-          <p style={{ fontSize: "1.05rem", color: "var(--site-text-muted)" }}>
             interactive math for curious students
           </p>
         </motion.div>
 
-        {/* Module grid — 2 columns on md+, 1 on mobile */}
+        {/* ── Module grid ── */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
             gap: "16px",
+            alignItems: "start",
           }}
         >
           {MODULES.map((mod, i) => {
-            const inner = (
+            const tile = (
               <div
                 className={`module-tile${mod.available ? "" : " module-tile--locked"}`}
                 style={{
                   background: mod.tileBg,
                   border: `1.5px solid ${mod.border}`,
                   borderRadius: "14px",
+                  overflow: "hidden",
+                  /* Ensure consistent structure regardless of content */
+                  display: "flex",
+                  flexDirection: "column",
                 }}
               >
-                {/* Visual area */}
-                <div style={{ aspectRatio: "5/3", overflow: "hidden", position: "relative" }}>
-                  {mod.art}
+                {/* ── Illustration area — fixed height for all tiles ── */}
+                <div
+                  style={{
+                    height: `${ART_HEIGHT}px`,
+                    position: "relative",
+                    overflow: "hidden",
+                    flexShrink: 0,
+                  }}
+                >
+                  {/* Art — dimmed to 25% on locked tiles */}
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      opacity: mod.available ? 1 : 0.25,
+                      transition: "opacity 0.2s",
+                    }}
+                  >
+                    {mod.art}
+                  </div>
+
+                  {/* Coming-soon pill — rendered at full opacity above dimmed art */}
                   {!mod.available && (
                     <div
                       style={{
                         position: "absolute",
                         inset: 0,
-                        background: "rgba(255,248,242,0.45)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
+                        pointerEvents: "none",
                       }}
                     >
-                      <span
-                        style={{
-                          background: "rgba(255,255,255,0.88)",
-                          border: "1.5px solid var(--site-border)",
-                          borderRadius: "20px",
-                          padding: "4px 14px",
-                          fontSize: "0.75rem",
-                          fontWeight: 700,
-                          letterSpacing: "0.06em",
-                          textTransform: "uppercase",
-                          color: "var(--site-text-muted)",
-                        }}
-                      >
-                        Coming Soon
-                      </span>
+                      <span style={PILL_STYLE}>Coming Soon</span>
                     </div>
                   )}
                 </div>
 
-                {/* Footer label */}
+                {/* ── Footer label band — identical padding/structure on every tile ── */}
                 <div
                   style={{
-                    background: mod.tileFooterBg,
+                    background: mod.footerBg,
                     borderTop: `1.5px solid ${mod.border}`,
-                    padding: "12px 16px",
+                    padding: FOOTER_PADDING,
+                    flexShrink: 0,
                   }}
                 >
                   <div
@@ -315,11 +371,11 @@ export default function Modules() {
                       textTransform: "uppercase",
                       letterSpacing: "0.08em",
                       color: mod.catColor,
-                      marginBottom: "3px",
+                      marginBottom: "4px",
+                      fontFamily: "'Space Grotesk', sans-serif",
                     }}
                   >
-                    {mod.category}
-                    {mod.available ? ` · ${mod.time}` : ""}
+                    {mod.category}{mod.available ? ` · ${mod.time}` : ""}
                   </div>
                   <div
                     style={{
@@ -328,6 +384,7 @@ export default function Modules() {
                       color: mod.titleColor,
                       lineHeight: 1.25,
                       letterSpacing: "-0.02em",
+                      fontFamily: "'Space Grotesk', sans-serif",
                     }}
                   >
                     {mod.title}
@@ -339,16 +396,16 @@ export default function Modules() {
             return (
               <motion.div
                 key={mod.id}
-                initial={{ opacity: 0, y: 18 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.07, duration: 0.4 }}
               >
                 {mod.available && mod.href ? (
                   <Link href={mod.href} style={{ textDecoration: "none", display: "block" }}>
-                    {inner}
+                    {tile}
                   </Link>
                 ) : (
-                  inner
+                  tile
                 )}
               </motion.div>
             );
@@ -368,15 +425,15 @@ export default function Modules() {
           gap: "12px",
         }}
       >
-        <span style={{ fontWeight: 800, letterSpacing: "-0.02em", color: "var(--site-text)" }}>
+        <span style={{ fontWeight: 800, letterSpacing: "-0.02em", color: "var(--site-text)", fontFamily: "'Space Grotesk', sans-serif" }}>
           Website Name
         </span>
         <div style={{ display: "flex", gap: "20px" }}>
-          <Link href="/about" style={{ fontSize: "0.85rem", color: "var(--site-text-muted)", textDecoration: "none" }}>
+          <Link href="/about" style={{ fontSize: "0.85rem", color: "var(--site-text-muted)", textDecoration: "none", fontFamily: "'Space Grotesk', sans-serif" }}>
             About
           </Link>
         </div>
-        <span style={{ fontSize: "0.8rem", color: "var(--site-text-muted)" }}>
+        <span style={{ fontSize: "0.8rem", color: "var(--site-text-muted)", fontFamily: "'Space Grotesk', sans-serif" }}>
           © {new Date().getFullYear()} Website Name
         </span>
       </footer>
