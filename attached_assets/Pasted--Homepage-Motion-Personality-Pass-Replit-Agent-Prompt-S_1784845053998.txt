@@ -1,0 +1,30 @@
+# Homepage Motion & Personality Pass — Replit Agent Prompt
+
+## Scope — read this first
+This prompt only adds motion, hover interactions, and small playful/dynamic elements to the existing homepage. Do not touch: individual module pages/content, the About page, sign-in logic, the color palette, or the card/grid structure and typography fixed in the previous pass. This is additive polish, not a restructure.
+
+Site name stays "Website Name" (placeholder).
+
+## Goal
+The homepage currently feels static — nothing moves, nothing responds, nothing catches the eye beyond the colors. Add subtle motion and interactivity so it feels alive, the way neal.fun does, without adding new sections or content blocks.
+
+## 1. Micro-interactions on existing elements
+- **Module tiles**: on hover, scale up slightly (~1.02-1.03x) and lift with a soft shadow — should feel tactile, like picking up a card, not glowing. Border color can shift to a slightly more saturated version of the tile's accent color on hover.
+- **Nav links** ("About", "Sign In"): add a subtle hover state — underline animation, background color shift, or slight scale — something small and responsive, not decorative.
+- **Cursor**: consider a small custom cursor effect when hovering over module tiles specifically (e.g. cursor grows slightly, or a tiny label like "Explore →" follows it). Keep this subtle — test that it doesn't feel gimmicky or slow down interaction.
+- All transitions should be fast and snappy (150-250ms), not slow/dreamy — motion should feel tactile and immediate, matching the "tactile" aesthetic goal, not floaty/glowy.
+
+## 2. Ambient background motion
+- Add a small number of faint, slowly drifting decorative elements in the background of the hero/empty space areas — e.g. simple line-art math symbols (π, √, ∞, +, =) at low opacity (5-10%), moving very slowly (think barely-perceptible drift, not obvious animation).
+- Alternatively or additionally, extend the dot-grid texture pattern from the Pythagorean tile into the page background at very low opacity, so the whole page feels visually connected to the module tiles rather than having a plain empty backdrop.
+- Keep this genuinely subtle — the goal is texture and life at a glance, not something that competes with the module tiles for attention. If in doubt, reduce opacity/speed further.
+
+## 3. Playful, dynamic touches
+- Add a simple live counter somewhere unobtrusive (e.g. small text near the header or footer) showing something like total module views or a similar light engagement stat — doesn't need to be real backend data yet if that's not wired up; a placeholder/mock number is fine for now, but structure it so it can be connected to real analytics later.
+- Add a "Surprise me" or "Random module" button/link near the top of the page (near the tagline or nav) that jumps to a randomly selected module. Style it consistently with the rest of the flat/tactile design system — a simple pill button, not a glowing CTA.
+- If there's obvious empty space in a corner or between sections, consider one small easter-egg-style animated doodle (e.g. a tiny bouncing shape or a math symbol that reacts to hover) — optional, low priority, only add if it doesn't clutter the layout.
+
+## Constraints
+- Nothing here should change page structure, card sizing, spacing, or typography from the previous design pass — this is purely about adding motion/interaction/personality on top of what already exists.
+- Keep all effects performant and subtle — if any animation feels heavy, distracting, or slow, scale it back rather than making it more prominent.
+- Everything added should still feel "flat and tactile," not glowing or futuristic — motion should reinforce the neal.fun playfulness, not reintroduce the sci-fi aesthetic we removed earlier.
