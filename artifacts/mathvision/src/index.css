@@ -46,36 +46,49 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-:root, .dark {
-  --background: 230 25% 10%;
-  --foreground: 210 40% 98%;
+/* ─── Site-wide design tokens — neal.fun-inspired warm light palette ─── */
+:root {
+  /* Raw palette — use these as CSS custom properties in inline styles */
+  --site-bg:           #FFF1E7;
+  --site-bg-card:      #FFFFFF;
+  --site-accent-1:     #F0FB9B;
+  --site-accent-2:     #FFCA8A;
+  --site-accent-3:     #FFB69E;
+  --site-text:         #1c1108;
+  --site-text-muted:   #6b5742;
+  --site-border:       #d6c4af;
+  --site-border-hover: #b8a48e;
 
-  --card: 230 25% 14%;
-  --card-foreground: 210 40% 98%;
-  --card-border: 230 25% 20%;
+  /* Tailwind HSL tokens (maps via @theme inline above) */
+  --background:    28 70% 95%;    /* ≈ #FFF1E7 cream */
+  --foreground:    28 50% 9%;     /* near-black warm */
 
-  --popover: 230 25% 14%;
-  --popover-foreground: 210 40% 98%;
-  --popover-border: 230 25% 20%;
+  --card:          30 60% 99%;
+  --card-foreground: 28 50% 9%;
+  --card-border:   30 30% 85%;
 
-  --primary: 250 85% 65%;
+  --popover:       30 60% 99%;
+  --popover-foreground: 28 50% 9%;
+  --popover-border: 30 30% 85%;
+
+  --primary:       250 65% 52%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 230 25% 20%;
-  --secondary-foreground: 210 40% 98%;
+  --secondary:     30 35% 91%;
+  --secondary-foreground: 28 50% 20%;
 
-  --muted: 230 25% 18%;
-  --muted-foreground: 215 20% 65%;
+  --muted:         30 25% 93%;
+  --muted-foreground: 30 18% 48%;
 
-  --accent: 40 90% 55%;
-  --accent-foreground: 230 25% 10%;
+  --accent:        38 90% 67%;
+  --accent-foreground: 28 50% 9%;
 
-  --destructive: 0 85% 60%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive:   0 72% 52%;
+  --destructive-foreground: 0 0% 100%;
 
-  --border: 230 25% 20%;
-  --input: 230 25% 20%;
-  --ring: 250 85% 65%;
+  --border:        30 28% 83%;
+  --input:         30 28% 88%;
+  --ring:          250 65% 52%;
 
   --radius: 0.75rem;
 }
@@ -93,34 +106,49 @@ html {
   }
 }
 
-.glass-panel {
-  background: rgba(30, 33, 43, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+/* ─── Site-wide layout primitives ─── */
+
+/* Persistent top nav */
+.site-nav {
+  background: #FFF1E7;
+  border-bottom: 1.5px solid var(--site-border);
 }
 
-.glow-text {
-  text-shadow: 0 0 20px hsla(250, 85%, 65%, 0.5);
+/* Flat module tile — solid border, soft shadow on hover only */
+.module-tile {
+  background: #fff;
+  border: 1.5px solid var(--site-border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.module-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+}
+.module-tile--locked {
+  cursor: default;
+  opacity: 0.5;
+}
+.module-tile--locked:hover {
+  transform: none;
+  box-shadow: none;
 }
 
-.bg-grid-pattern {
-  background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+/* Flat content card (used on About page) */
+.content-card {
+  background: #fff;
+  border: 1.5px solid var(--site-border);
+  border-radius: 16px;
+  padding: 32px;
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: hsl(var(--background));
-}
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--secondary));
-  border-radius: 5px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground));
-}
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--site-bg); }
+::-webkit-scrollbar-thumb { background: #c8b49e; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #a8947e; }

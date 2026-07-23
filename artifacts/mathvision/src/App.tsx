@@ -6,8 +6,8 @@ import { Switch, Route, useLocation, Redirect, Router as WouterRouter } from 'wo
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import Home from '@/pages/Home';
 import Modules from '@/pages/Modules';
+import About from '@/pages/About';
 import PythagoreanModule from '@/pages/PythagoreanModule';
 import NotFound from '@/pages/not-found';
 
@@ -34,6 +34,7 @@ if (!clerkPubKey) {
   throw new Error('Missing VITE_CLERK_PUBLISHABLE_KEY');
 }
 
+// Light/cream theme matching the site palette
 const clerkAppearance = {
   theme: shadcn,
   cssLayerName: "clerk",
@@ -43,52 +44,68 @@ const clerkAppearance = {
     logoImageUrl: `${window.location.origin}${basePath}/logo.svg`,
   },
   variables: {
-    colorPrimary: "hsl(250 85% 65%)",
-    colorForeground: "hsl(210 40% 98%)",
-    colorMutedForeground: "hsl(215 20% 65%)",
-    colorDanger: "hsl(0 85% 60%)",
-    colorBackground: "hsl(230 25% 10%)",
-    colorInput: "hsl(230 25% 20%)",
-    colorInputForeground: "hsl(210 40% 98%)",
-    colorNeutral: "hsl(230 25% 20%)",
+    colorPrimary: "hsl(250 65% 52%)",
+    colorForeground: "#1c1108",
+    colorMutedForeground: "#6b5742",
+    colorDanger: "hsl(0 72% 52%)",
+    colorBackground: "#FFF8F2",
+    colorInput: "#f5ece3",
+    colorInputForeground: "#1c1108",
+    colorNeutral: "#d6c4af",
     fontFamily: "'Space Grotesk', sans-serif",
     borderRadius: "12px",
   },
   elements: {
     rootBox: "w-full flex justify-center",
-    cardBox: "bg-[#0f111a] rounded-[12px] w-[440px] max-w-full overflow-hidden glass-panel border border-white/10 shadow-2xl",
+    cardBox:
+      "w-[440px] max-w-full overflow-hidden rounded-[14px] border border-[#d6c4af] shadow-sm bg-[#FFF8F2]",
     card: "!shadow-none !border-0 !bg-transparent !rounded-none",
     footer: "!shadow-none !border-0 !bg-transparent !rounded-none",
-    headerTitle: "text-2xl font-bold text-white tracking-tight",
-    headerSubtitle: "text-muted-foreground",
-    socialButtonsBlockButtonText: "text-white font-medium",
-    formFieldLabel: "text-white/80 font-medium",
-    footerActionLink: "text-primary hover:text-primary/80 font-semibold",
-    footerActionText: "text-muted-foreground",
-    dividerText: "text-muted-foreground text-xs uppercase tracking-wider",
-    identityPreviewEditButton: "text-primary hover:text-primary/80",
-    formFieldSuccessText: "text-green-400",
-    alertText: "text-white",
-    logoBox: "flex justify-center mb-6",
-    logoImage: "h-14 w-auto drop-shadow-[0_0_12px_hsla(250,85%,65%,0.6)]",
-    socialButtonsBlockButton: "bg-white/5 border-white/10 hover:bg-white/10 transition-colors text-white",
-    formButtonPrimary: "bg-primary hover:bg-primary/90 text-white font-bold transition-all shadow-[0_0_15px_hsla(250,85%,65%,0.3)]",
-    formFieldInput: "bg-black/40 border-white/10 text-white focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-white/30",
+    headerTitle: "text-2xl font-bold tracking-tight text-[#1c1108]",
+    headerSubtitle: "text-[#6b5742]",
+    socialButtonsBlockButtonText: "font-medium text-[#1c1108]",
+    socialButtonsBlockButton:
+      "bg-white border-[#d6c4af] hover:bg-[#fdf5ee] transition-colors text-[#1c1108]",
+    formFieldLabel: "font-medium text-[#1c1108]",
+    formFieldInput:
+      "bg-white border-[#d6c4af] text-[#1c1108] focus:border-[#6644cc] focus:ring-1 focus:ring-[#6644cc] placeholder:text-[#a89070]",
+    formButtonPrimary:
+      "bg-[#1c1108] hover:bg-[#2d2010] text-[#FFF1E7] font-bold transition-all",
+    footerActionLink: "text-[#6644cc] hover:text-[#5533aa] font-semibold",
+    footerActionText: "text-[#6b5742]",
     footerAction: "mt-6 text-center",
-    dividerLine: "bg-white/10",
-    alert: "bg-destructive/20 border-destructive/50 text-white",
-    otpCodeFieldInput: "bg-black/40 border-white/10 text-white focus:border-primary",
+    dividerText: "text-[#6b5742] text-xs uppercase tracking-wider",
+    dividerLine: "bg-[#d6c4af]",
+    logoBox: "flex justify-center mb-6",
+    logoImage: "h-12 w-auto",
+    alert: "bg-red-50 border-red-200 text-red-800",
+    alertText: "text-red-800",
+    otpCodeFieldInput: "bg-white border-[#d6c4af] text-[#1c1108] focus:border-[#6644cc]",
     formFieldRow: "mb-4",
     main: "w-full",
+    identityPreviewEditButton: "text-[#6644cc] hover:text-[#5533aa]",
   },
 };
 
 function SignInPage() {
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-background bg-grid-pattern px-4 relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] -z-10 opacity-50 pointer-events-none"></div>
-      <div className="relative z-10 w-full max-w-md">
-        <SignIn routing="path" path={`${basePath}/sign-in`} signUpUrl={`${basePath}/sign-up`} />
+    <div
+      style={{
+        minHeight: "100dvh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#FFF1E7",
+        padding: "24px",
+        fontFamily: "'Space Grotesk', sans-serif",
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: "480px" }}>
+        <SignIn
+          routing="path"
+          path={`${basePath}/sign-in`}
+          signUpUrl={`${basePath}/sign-up`}
+        />
       </div>
     </div>
   );
@@ -96,10 +113,23 @@ function SignInPage() {
 
 function SignUpPage() {
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-background bg-grid-pattern px-4 relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] -z-10 opacity-50 pointer-events-none"></div>
-      <div className="relative z-10 w-full max-w-md">
-        <SignUp routing="path" path={`${basePath}/sign-up`} signInUrl={`${basePath}/sign-in`} />
+    <div
+      style={{
+        minHeight: "100dvh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#FFF1E7",
+        padding: "24px",
+        fontFamily: "'Space Grotesk', sans-serif",
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: "480px" }}>
+        <SignUp
+          routing="path"
+          path={`${basePath}/sign-up`}
+          signInUrl={`${basePath}/sign-in`}
+        />
       </div>
     </div>
   );
@@ -122,32 +152,7 @@ function ClerkQueryClientCacheInvalidator() {
   return null;
 }
 
-function HomeRedirect() {
-  return (
-    <>
-      <Show when="signed-in">
-        <Redirect to="/modules" />
-      </Show>
-      <Show when="signed-out">
-        <Home />
-      </Show>
-    </>
-  );
-}
-
-function ModulesRoute() {
-  return (
-    <>
-      <Show when="signed-in">
-        <Modules />
-      </Show>
-      <Show when="signed-out">
-        <Redirect to="/" />
-      </Show>
-    </>
-  );
-}
-
+// /modules/pythagorean is still auth-protected
 function PythagoreanModuleRoute() {
   return (
     <>
@@ -155,7 +160,7 @@ function PythagoreanModuleRoute() {
         <PythagoreanModule />
       </Show>
       <Show when="signed-out">
-        <Redirect to="/" />
+        <Redirect to="/sign-in" />
       </Show>
     </>
   );
@@ -171,6 +176,8 @@ function ClerkProviderWithRoutes() {
       appearance={clerkAppearance}
       signInUrl={`${basePath}/sign-in`}
       signUpUrl={`${basePath}/sign-up`}
+      afterSignInUrl={`${basePath}/`}
+      afterSignUpUrl={`${basePath}/`}
       localization={{
         signIn: {
           start: {
@@ -191,10 +198,14 @@ function ClerkProviderWithRoutes() {
       <QueryClientProvider client={queryClient}>
         <ClerkQueryClientCacheInvalidator />
         <Switch>
-          <Route path="/" component={HomeRedirect} />
+          {/* Public homepage — the module grid */}
+          <Route path="/" component={Modules} />
+          {/* About page (repurposed landing page) */}
+          <Route path="/about" component={About} />
+          {/* Auth */}
           <Route path="/sign-in/*?" component={SignInPage} />
           <Route path="/sign-up/*?" component={SignUpPage} />
-          <Route path="/modules" component={ModulesRoute} />
+          {/* Module pages (auth-protected) */}
           <Route path="/modules/pythagorean" component={PythagoreanModuleRoute} />
           <Route component={NotFound} />
         </Switch>
