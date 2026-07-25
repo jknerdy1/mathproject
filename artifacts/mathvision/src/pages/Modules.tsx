@@ -4,62 +4,6 @@ import { motion } from "framer-motion";
 import { SiteNav } from "@/components/SiteNav";
 
 /* ─────────────────────────────────────────────────────────────
-   AMBIENT BACKGROUND — slowly drifting math symbols
-   Very low opacity (6%), non-interactive, GPU-animated.
-───────────────────────────────────────────────────────────── */
-
-const FLOAT_SYMBOLS = [
-  { char: "π",  left: "7%",  top: "22%", size: 22, dx:  12, dy:  8,  dur: 28 },
-  { char: "√",  left: "83%", top: "14%", size: 18, dx:  -8, dy:  14, dur: 36 },
-  { char: "∞",  left: "13%", top: "60%", size: 20, dx:  10, dy:  -7, dur: 42 },
-  { char: "Σ",  left: "72%", top: "50%", size: 16, dx: -12, dy:   8, dur: 33 },
-  { char: "∫",  left: "46%", top: "28%", size: 24, dx:   6, dy:  12, dur: 48 },
-  { char: "Δ",  left: "58%", top: "76%", size: 14, dx:  -8, dy: -10, dur: 39 },
-  { char: "∠",  left: "27%", top: "80%", size: 16, dx:  14, dy:  -6, dur: 44 },
-  { char: "+",  left: "87%", top: "68%", size: 26, dx:  -6, dy:  12, dur: 31 },
-  { char: "=",  left: "4%",  top: "42%", size: 18, dx:  10, dy:  -8, dur: 37 },
-];
-
-function FloatingSymbols() {
-  return (
-    <>
-      {FLOAT_SYMBOLS.map((s) => (
-        <motion.div
-          key={s.char + s.left}
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            left: s.left,
-            top: s.top,
-            fontSize: `${s.size}px`,
-            fontWeight: 800,
-            fontFamily: "'Space Grotesk', sans-serif",
-            opacity: 0.06,
-            pointerEvents: "none",
-            userSelect: "none",
-            color: "var(--site-text)",
-            willChange: "transform",
-            zIndex: 0,
-          }}
-          animate={{
-            x: [0, s.dx, 0, -s.dx, 0],
-            y: [0, s.dy, 0, -s.dy, 0],
-          }}
-          transition={{
-            duration: s.dur,
-            ease: "easeInOut",
-            repeat: Infinity,
-            repeatType: "loop",
-          }}
-        >
-          {s.char}
-        </motion.div>
-      ))}
-    </>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────
    TILE ART — unchanged from previous pass
 ───────────────────────────────────────────────────────────── */
 
@@ -374,6 +318,7 @@ export default function Modules() {
 
   return (
     <div
+      className="modules-page"
       style={{
         minHeight: "100vh",
         background: "var(--site-bg)",
@@ -383,9 +328,6 @@ export default function Modules() {
         overflowX: "hidden",
       }}
     >
-      {/* Ambient floating symbols — sit behind all content */}
-      <FloatingSymbols />
-
       <div style={{ position: "relative", zIndex: 1 }}>
         <SiteNav />
 
