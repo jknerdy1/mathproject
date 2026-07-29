@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/reac
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import Modules from '@/pages/Modules';
+import HeroOverlay from '@/components/HeroOverlay';
 import About from '@/pages/About';
 import PythagoreanModule from '@/pages/PythagoreanModule';
 import NotFound from '@/pages/not-found';
@@ -198,8 +199,8 @@ function ClerkProviderWithRoutes() {
       <QueryClientProvider client={queryClient}>
         <ClerkQueryClientCacheInvalidator />
         <Switch>
-          {/* Public homepage — the module grid */}
-          <Route path="/" component={Modules} />
+          {/* Public homepage — the module grid with hero overlay */}
+          <Route path="/" component={() => <><Modules /><HeroOverlay /></>} />
           {/* About page (repurposed landing page) */}
           <Route path="/about" component={About} />
           {/* Auth */}

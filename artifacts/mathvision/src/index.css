@@ -183,6 +183,11 @@ html {
   100% { transform: translate(300px, 300px); }
 }
 
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
 /* Ensure content sits above the wallpaper */
 @layer components {
   .modules-page > div[style*="zIndex: 1"],
