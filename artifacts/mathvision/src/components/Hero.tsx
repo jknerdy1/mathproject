@@ -568,8 +568,7 @@ export function Hero() {
               margin: 0,
             }}
           >
-            I created interactive modules teaching concepts the way I wished they were taught to me. 
-            I try to turn concepts into something you can see, experience, and understand:
+            I created interactive modules teaching concepts the way I wish they were taught to me.
           </p>
         </motion.div>
 

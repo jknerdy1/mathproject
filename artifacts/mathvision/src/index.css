@@ -6,6 +6,7 @@
 @plugin "@tailwindcss/typography";
 
 @source "../src/pages/Modules.tsx";
+@source "../src/components/HeroOverlay.tsx";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -160,15 +161,15 @@ html {
 @layer components {
   .modules-page {
     position: relative;
-    overflow-x: hidden;
+    overflow: clip;
   }
 
-  .modules-page::before {
-    content: "";
-    position: fixed;
-    inset: -10%;
-    z-index: 0;
+  .modules-wallpaper {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
     pointer-events: none;
+    overflow: hidden;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'%3E%3Cdefs%3E%3Cstyle%3E%40font-face%20%7Bfont-family%3A'STIX%20Two%20Math'%3Bsrc%3Aurl(https%3A%2F%2Ffonts.gstatic.com%2Fs%2Fstixtwomath%2Fv13%2Fgok-H76V1Id5T24GkubVqHYY1YqjYhKGL2iO.ttf)%20format('truetype')%3B%7Dtext%7Bfont-family%3A'STIX%20Two%20Math'%3Bfont-size%3A42px%3Bfill%3A%231c1108%3Bfont-weight%3Anormal%3Bdominant-baseline%3Amiddle%3Btext-anchor%3Amiddle%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctext%20x%3D'40'%20y%3D'55'%3E%CF%80%3C%2Ftext%3E%3Ctext%20x%3D'140'%20y%3D'115'%3E%E2%88%9A%3C%2Ftext%3E%3Ctext%20x%3D'240'%20y%3D'40'%3E%E2%88%9E%3C%2Ftext%3E%3Ctext%20x%3D'340'%20y%3D'145'%3E%E2%88%91%3C%2Ftext%3E%3Ctext%20x%3D'440'%20y%3D'80'%3E%E2%88%AB%3C%2Ftext%3E%3Ctext%20x%3D'540'%20y%3D'125'%3E%E2%89%88%3C%2Ftext%3E%3Ctext%20x%3D'70'%20y%3D'210'%3E%CE%94%3C%2Ftext%3E%3Ctext%20x%3D'170'%20y%3D'270'%3E%CE%B8%3C%2Ftext%3E%3Ctext%20x%3D'270'%20y%3D'200'%3E%C2%B1%3C%2Ftext%3E%3Ctext%20x%3D'370'%20y%3D'260'%3E%3D%3C%2Ftext%3E%3Ctext%20x%3D'470'%20y%3D'300'%3Ex%C2%B2%3C%2Ftext%3E%3Ctext%20x%3D'570'%20y%3D'230'%3Ea%C2%B2%2Bb%C2%B2%3Dc%C2%B2%3C%2Ftext%3E%3Ctext%20x%3D'110'%20y%3D'360'%3E%CF%86%3C%2Ftext%3E%3Ctext%20x%3D'210'%20y%3D'420'%3E%CE%BB%3C%2Ftext%3E%3Ctext%20x%3D'310'%20y%3D'350'%3E%CE%BC%3C%2Ftext%3E%3Ctext%20x%3D'410'%20y%3D'405'%3E%CE%A3%3C%2Ftext%3E%3Ctext%20x%3D'510'%20y%3D'455'%3E%CE%A8%3C%2Ftext%3E%3Ctext%20x%3D'30'%20y%3D'510'%3E%CE%A9%3C%2Ftext%3E%3Ctext%20x%3D'130'%20y%3D'570'%3E%E2%88%82%3C%2Ftext%3E%3Ctext%20x%3D'230'%20y%3D'495'%3E%CE%B5%3C%2Ftext%3E%3Ctext%20x%3D'330'%20y%3D'550'%3E%CE%B7%3C%2Ftext%3E%3Ctext%20x%3D'430'%20y%3D'605'%3E%E2%88%87%3C%2Ftext%3E%3Ctext%20x%3D'530'%20y%3D'535'%3E%CE%93%3C%2Ftext%3E%3C%2Fsvg%3E");
     background-repeat: repeat;
     background-size: 600px 600px;
@@ -186,6 +187,11 @@ html {
 @keyframes pulse {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
+}
+
+/* Hide duplicate nav — the hero has its own nav, suppress the modules page's SiteNav */
+body:has(.hero-section) .site-nav {
+  display: none !important;
 }
 
 /* Ensure content sits above the wallpaper */

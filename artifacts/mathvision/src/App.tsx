@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
-import { ClerkProvider, SignIn, SignUp, Show, useClerk } from '@clerk/react';
+import { ClerkProvider, SignIn, SignUp, useClerk } from '@clerk/react';
 import { publishableKeyFromHost } from '@clerk/react/internal';
 import { shadcn } from '@clerk/themes';
-import { Switch, Route, useLocation, Redirect, Router as WouterRouter } from 'wouter';
+import { Switch, Route, useLocation, Router as WouterRouter } from 'wouter';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -153,20 +153,6 @@ function ClerkQueryClientCacheInvalidator() {
   return null;
 }
 
-// /modules/pythagorean is still auth-protected
-function PythagoreanModuleRoute() {
-  return (
-    <>
-      <Show when="signed-in">
-        <PythagoreanModule />
-      </Show>
-      <Show when="signed-out">
-        <Redirect to="/sign-in" />
-      </Show>
-    </>
-  );
-}
-
 function ClerkProviderWithRoutes() {
   const [, setLocation] = useLocation();
 
@@ -177,8 +163,6 @@ function ClerkProviderWithRoutes() {
       appearance={clerkAppearance}
       signInUrl={`${basePath}/sign-in`}
       signUpUrl={`${basePath}/sign-up`}
-      afterSignInUrl={`${basePath}/`}
-      afterSignUpUrl={`${basePath}/`}
       localization={{
         signIn: {
           start: {
@@ -200,14 +184,14 @@ function ClerkProviderWithRoutes() {
         <ClerkQueryClientCacheInvalidator />
         <Switch>
           {/* Public homepage — the module grid with hero overlay */}
-          <Route path="/" component={() => <><Modules /><HeroOverlay /></>} />
+          <Route path="/" component={() => <><HeroOverlay /><Modules /></>} />
           {/* About page (repurposed landing page) */}
           <Route path="/about" component={About} />
           {/* Auth */}
           <Route path="/sign-in/*?" component={SignInPage} />
           <Route path="/sign-up/*?" component={SignUpPage} />
-          {/* Module pages (auth-protected) */}
-          <Route path="/modules/pythagorean" component={PythagoreanModuleRoute} />
+          {/* Module pages (no sign-in required) */}
+          <Route path="/modules/pythagorean" component={PythagoreanModule} />
           <Route component={NotFound} />
         </Switch>
       </QueryClientProvider>

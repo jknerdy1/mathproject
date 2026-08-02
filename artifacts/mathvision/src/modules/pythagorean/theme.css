@@ -1,0 +1,652 @@
+/* ─────────────────────────────────────────────────────────────
+   Scoped theme — The Pythagorean Theorem module.
+   Every rule is intended to apply only inside `.pyth-module`, so
+   nothing leaks into — or is overridden by — the site-wide sheet.
+   Unlayered author rules beat Tailwind's layered base/utilities.
+   ───────────────────────────────────────────────────────────── */
+
+.pyth-module {
+  /* ── Palette: marble & lapis ── */
+  --pth-ink: #143371;      /* headers / text */
+  --pth-royal: #1d52ac;    /* primary action */
+  --pth-horizon: #4691ce;  /* accent / visuals */
+  --pth-mist: #92b1cf;     /* borders / muted */
+  --pth-warm: #d3cac1;     /* warm highlight */
+  --pth-paper: #ececf1;    /* background */
+
+  /* ── Typefaces ── */
+  --pth-display: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  --pth-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  position: relative;
+  min-height: 100dvh;
+  overflow-x: clip;
+  background:
+    radial-gradient(1100px 560px at 15% -12%, rgba(70, 145, 206, 0.14), transparent 62%),
+    radial-gradient(900px 520px at 108% 12%, rgba(211, 202, 193, 0.5), transparent 55%),
+    var(--pth-paper);
+  color: var(--pth-ink);
+  font-family: var(--pth-body);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.pyth-module ::selection {
+  background: var(--pth-warm);
+  color: var(--pth-ink);
+}
+
+/* ── Typographic helpers ── */
+.pyth-module .pth-display {
+  font-family: var(--pth-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--pth-ink);
+}
+
+.pyth-module .pth-kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pth-royal);
+}
+
+.pyth-module .pth-muted {
+  color: var(--pth-mist);
+}
+
+/* ── Frame: minimal top-left home button + module label ── */
+.pyth-module .pyth-topbar {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 60;
+}
+
+.pyth-module .pyth-topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid var(--pth-mist);
+  box-shadow: 0 4px 14px rgba(20, 51, 113, 0.12);
+  max-width: calc(100vw - 36px);
+}
+
+.pyth-module .pyth-home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: var(--pth-royal);
+  color: #fff;
+  border: none;
+  font-family: var(--pth-body);
+  font-size: 0.83rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.14s ease, transform 0.14s ease;
+}
+
+.pyth-module .pyth-home-btn:hover {
+  background: var(--pth-ink);
+  transform: translateY(-1px);
+}
+
+.pyth-module .pyth-module-tag {
+  padding: 0 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--pth-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pyth-module .pyth-dots--top {
+  position: fixed;
+  top: 26px;
+  right: 26px;
+  z-index: 60;
+}
+
+.pyth-module .pyth-dots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pyth-module .pyth-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--pth-mist);
+  transition: width 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pyth-module .pyth-dot--done {
+  background: var(--pth-royal);
+}
+
+.pyth-module .pyth-dot--active {
+  width: 22px;
+  background: var(--pth-ink);
+  box-shadow: 0 0 0 3px rgba(20, 51, 113, 0.16);
+}
+
+/* ── Frame: beat area (sections render full-bleed) ── */
+.pyth-module .pyth-main {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+}
+
+.pyth-module .pyth-beat {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Frame: floating circular nav buttons (FABs) ── */
+.pyth-module .pyth-fab {
+  position: fixed;
+  bottom: 32px;
+  z-index: 60;
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  font-family: var(--pth-body);
+  box-shadow: 0 6px 18px rgba(20, 51, 113, 0.28);
+}
+
+.pyth-module .pyth-fab--next {
+  right: 32px;
+  background: var(--pth-royal);
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-fab--next:hover {
+  background: var(--pth-horizon);
+}
+
+.pyth-module .pyth-fab--back {
+  left: 32px;
+  background: var(--pth-mist);
+  color: var(--pth-ink);
+}
+
+.pyth-module .pyth-fab--back:hover {
+  background: var(--pth-horizon);
+  color: #143371;
+}
+
+@media (max-width: 640px) {
+  .pyth-module .pyth-fab {
+    width: 54px;
+    height: 54px;
+    bottom: 24px;
+  }
+  .pyth-module .pyth-fab--next { right: 24px; }
+  .pyth-module .pyth-fab--back { left: 24px; }
+  .pyth-module .pyth-dots--top { top: 18px; right: 18px; }
+}
+
+/* ── Introduction section ── */
+.pyth-module .pyth-intro {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 96px 24px 132px;
+  background: #143371;
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-intro .intro-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  max-width: 860px;
+  text-align: center;
+}
+
+.pyth-module .pyth-intro .intro-title {
+  font-family: var(--pth-display);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 5vw, 3.4rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-intro .intro-title--hook {
+  font-size: clamp(2rem, 6vw, 4rem);
+}
+
+.pyth-module .pyth-intro .intro-accent {
+  color: #d3cac1;
+}
+
+.pyth-module .pyth-intro .intro-prose {
+  color: #ecedf1;
+  font-size: clamp(1.15rem, 2.6vw, 1.7rem);
+  line-height: 1.6;
+  max-width: 800px;
+}
+
+.pyth-module .pyth-intro .intro-muted {
+  color: #92b1cf;
+}
+
+.pyth-module .pyth-intro .intro-stage {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.pyth-module .pyth-intro .intro-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: none;
+  user-select: none;
+}
+
+.pyth-module .pyth-intro .grid-line {
+  stroke: #92b1cf;
+}
+
+.pyth-module .pyth-intro .intro-vertex {
+  fill: #4691ce;
+}
+
+.pyth-module .pyth-intro .intro-static {
+  width: 200px;
+  height: auto;
+}
+
+.pyth-module .pyth-intro .intro-readouts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+}
+
+.pyth-module .pyth-intro .readout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid var(--pth-mist);
+  border-radius: 12px;
+  padding: 8px 18px;
+  min-width: 84px;
+}
+
+.pyth-module .pyth-intro .readout__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #92b1cf;
+}
+
+.pyth-module .pyth-intro .readout__value {
+  font-family: "Spline Sans Mono", ui-monospace, monospace;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #4691ce;
+}
+
+.pyth-module .pyth-intro .intro-eqpanel {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid var(--pth-mist);
+  border-radius: 14px;
+  padding: 18px 30px;
+  text-align: center;
+}
+
+.pyth-module .pyth-intro .eq-line {
+  color: #ecedf1;
+  font-size: 1.5rem;
+}
+
+.pyth-module .pyth-intro .eq-line .eq-num {
+  color: #4691ce;
+}
+
+.pyth-module .pyth-intro .eq-line .eq-sym {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-intro .intro-prompt {
+  color: #92b1cf;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  max-width: 560px;
+  text-align: center;
+}
+
+.pyth-module .pyth-intro .intro-reveal {
+  color: #d3cac1;
+  font-size: 1.1rem;
+}
+
+.pyth-module .pyth-intro .intro-dimmed .intro-svg {
+  opacity: 0.5;
+}
+
+/* KaTeX on the dark background */
+.pyth-module .pyth-intro .pth-eq .katex {
+  color: #ecedf1;
+}
+
+/* ── Court courtyard section (light: first shift away from dark) ── */
+.pyth-module .pyth-courtyard {
+  width: 100%;
+  min-height: 100dvh;
+  background: #ececf1;
+}
+
+.pyth-module .pyth-courtyard .court-content {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  padding: 96px 24px 132px;
+}
+
+.pyth-module .pyth-courtyard .court-text {
+  max-width: 760px;
+  text-align: center;
+}
+
+.pyth-module .pyth-courtyard .court-title {
+  font-family: var(--pth-display);
+  font-weight: 700;
+  color: #143371;
+  font-size: clamp(1.5rem, 3.8vw, 2.4rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* Rectangular tile viewport — a contained box, not the whole screen */
+.pyth-module .pyth-courtyard .court-stage {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  background: #dfe5ef;
+  border: 1.5px solid #92b1cf;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 14px 34px rgba(20, 51, 113, 0.12);
+}
+
+.pyth-module .pyth-courtyard .court-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: none;
+  user-select: none;
+}
+
+.pyth-module .pyth-courtyard .court-flash {
+  position: absolute;
+  inset: 18px;
+  border-radius: 12px;
+  background: #4691ce;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.pyth-module .pyth-courtyard .court-complete {
+  max-width: 720px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pyth-module .pyth-courtyard .court-complete-text {
+  margin: 0;
+  color: #143371;
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
+
+.pyth-module .pyth-courtyard .court-complete-text--muted {
+  color: #5a739c;
+}
+
+.pyth-module .pyth-courtyard .court-complete .pth-eq .katex {
+  color: #143371;
+}
+
+/* ── Geometric (pinwheel) proof section ── */
+.pyth-module .pyth-geo {
+  width: 100%;
+  min-height: 100dvh;
+  background: #ececf1;
+}
+
+.pyth-module .pyth-geo .geo-content {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 96px 24px 132px;
+}
+
+.pyth-module .pyth-geo .geo-text {
+  max-width: 760px;
+  text-align: center;
+}
+
+.pyth-module .pyth-geo .geo-title {
+  font-family: var(--pth-display);
+  font-weight: 700;
+  color: #143371;
+  font-size: clamp(1.5rem, 3.8vw, 2.4rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.pyth-module .pyth-geo .geo-text .pth-eq .katex {
+  color: #143371;
+}
+
+.pyth-module .pyth-geo .geo-stage {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  border: 1.5px solid #92b1cf;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 14px 34px rgba(20, 51, 113, 0.12);
+}
+
+.pyth-module .pyth-geo .geo-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+  overflow: visible;
+}
+
+.pyth-module .pyth-geo .geo-title--small {
+  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+  line-height: 1.5;
+}
+
+.pyth-module .pyth-geo .geo-stage {
+  position: relative;
+}
+
+.pyth-module .pyth-geo .geo-flash {
+  position: absolute;
+  inset: 10px;
+  border-radius: 14px;
+  background: #4691ce;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.pyth-module .pyth-geo .geo-slider-row {
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pyth-module .pyth-geo .geo-slider-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: #143371;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.pyth-module .pyth-geo .geo-slider-labels span:first-child {
+  font-family: var(--pth-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.pyth-module .pyth-geo .geo-slider-labels span:last-child {
+  color: #5a739c;
+  font-size: 0.8rem;
+}
+
+.pyth-module .pyth-geo .geo-slider [class*="bg-primary/20"] {
+  background: rgba(29, 82, 172, 0.2);
+}
+.pyth-module .pyth-geo .geo-slider [class$="bg-primary"] {
+  background: #1d52ac;
+}
+.pyth-module .pyth-geo .geo-slider [class*="border-primary/50"] {
+  border-color: #1d52ac;
+}
+
+/* ── Panels & chips ── */
+.pyth-module .pth-panel {
+  background: #fff;
+  border: 1.5px solid var(--pth-mist);
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(20, 51, 113, 0.08);
+}
+
+.pyth-module .pth-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--pth-warm);
+  color: var(--pth-ink);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pyth-module .pth-btn {
+  font-family: var(--pth-body);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, background-color 0.14s ease;
+}
+
+.pyth-module .pth-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.pyth-module .pth-btn--royal {
+  background: var(--pth-royal);
+  color: #fff;
+}
+
+.pyth-module .pth-btn--royal:hover:not(:disabled) {
+  background: var(--pth-ink);
+  box-shadow: 0 10px 26px rgba(20, 51, 113, 0.3);
+}
+
+.pyth-module .pth-btn--ghost {
+  background: #fff;
+  color: var(--pth-ink);
+  border-color: var(--pth-mist);
+}
+
+.pyth-module .pth-btn--ghost:hover:not(:disabled) {
+  background: var(--pth-warm);
+}
+
+/* ── Interaction affordance: weighted, tactile ── */
+.pyth-module .pth-grab {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.pyth-module .pth-grab:active {
+  cursor: grabbing;
+}
+
+.pyth-module .pth-lift {
+  transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.16s ease;
+}
+
+.pyth-module .pth-lift:hover {
+  transform: scale(1.04);
+  box-shadow: 0 12px 30px rgba(20, 51, 113, 0.22);
+}
+
+.pyth-module .pth-lift-grab:active {
+  transform: scale(1.06);
+}
+
+/* ── Equations (KaTeX) ── */
+.pyth-module .pth-eq--display {
+  text-align: center;
+}
+
+.pyth-module .pth-eq--display .katex-display {
+  margin: 0.5em 0;
+}
+
+.pyth-module .pth-eq .katex {
+  color: var(--pth-ink);
+}
