@@ -557,6 +557,234 @@
   border-color: #1d52ac;
 }
 
+/* ── Distance formula section (dark reset, matches Introduction) ── */
+.pyth-module .pyth-dist {
+  width: 100%;
+  min-height: 100dvh;
+  background: #143371;
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-dist .dist-content {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+  padding: 96px 24px 132px;
+}
+
+.pyth-module .pyth-dist .dist-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  max-width: 860px;
+  text-align: center;
+}
+
+.pyth-module .pyth-dist .dist-title {
+  font-family: var(--pth-display);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 5vw, 3.2rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #ecedf1;
+  margin: 0;
+}
+
+.pyth-module .pyth-dist .dist-prompt {
+  color: #92b1cf;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.pyth-module .pyth-dist .dist-prose-wrap {
+  max-width: 800px;
+  text-align: center;
+}
+
+.pyth-module .pyth-dist .dist-prose {
+  color: #ecedf1;
+  font-size: clamp(1.15rem, 2.6vw, 1.6rem);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.pyth-module .pyth-dist .dist-prose .pth-eq .katex {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-dist .dist-stage {
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.pyth-module .pyth-dist .dist-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: none;
+  user-select: none;
+}
+
+.pyth-module .pyth-dist .dist-eqpanel {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid var(--pth-mist);
+  border-radius: 14px;
+  padding: 16px 26px;
+  text-align: center;
+}
+
+.pyth-module .pyth-dist .dist-eqpanel .eq-line {
+  color: #ecedf1;
+  font-size: 1.45rem;
+}
+
+.pyth-module .pyth-dist .dist-eqpanel .eq-line .eq-num {
+  color: #4691ce;
+}
+
+.pyth-module .pyth-dist .dist-eqpanel .eq-line .eq-sym {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-dist .dist-eqpanel .pth-eq .katex {
+  color: #ecedf1;
+}
+
+/* ── Algebraic proof section ── */
+.pyth-module .pyth-alg {
+  width: 100%;
+  min-height: 100dvh;
+  background: #ececf1;
+}
+
+.pyth-module .pyth-alg .alg-content {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 96px 24px 132px;
+}
+
+.pyth-module .pyth-alg .alg-text {
+  max-width: 760px;
+  text-align: center;
+}
+
+.pyth-module .pyth-alg .alg-title {
+  font-family: var(--pth-display);
+  font-weight: 700;
+  color: #143371;
+  font-size: clamp(1.5rem, 3.8vw, 2.4rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.pyth-module .pyth-alg .alg-prose {
+  font-family: var(--pth-display);
+  font-weight: 600;
+  color: #143371;
+  font-size: clamp(1.15rem, 2.6vw, 1.7rem);
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+.pyth-module .pyth-alg .alg-text .pth-eq .katex {
+  color: #143371;
+}
+
+.pyth-module .pyth-alg .alg-stage {
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  background: #fff;
+  border: 1.5px solid #92b1cf;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 14px 34px rgba(20, 51, 113, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  min-height: 300px;
+}
+
+.pyth-module .pyth-alg .alg-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+  overflow: visible;
+}
+
+.pyth-module .pyth-alg .alg-diagram {
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+.pyth-module .pyth-alg .alg-eq-area {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.pyth-module .pyth-alg .alg-eq {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: #143371;
+  font-size: clamp(1.4rem, 3.4vw, 2.1rem);
+  line-height: 1.4;
+}
+
+.pyth-module .pyth-alg .alg-token {
+  white-space: nowrap;
+}
+
+.pyth-module .pyth-alg .alg-token--cancel {
+  padding: 0 4px;
+}
+
+.pyth-module .pyth-alg .alg-op {
+  padding: 0 10px;
+  color: #143371;
+  font-family: var(--pth-body);
+  font-weight: 600;
+}
+
+.pyth-module .pyth-alg .alg-eq .pth-eq .katex {
+  color: #143371;
+}
+
+.pyth-module .pyth-alg .alg-strike {
+  position: absolute;
+  left: -6%;
+  right: -6%;
+  top: 50%;
+  height: 0.06em;
+  margin-top: -0.03em;
+  background: #92b1cf;
+  pointer-events: none;
+}
+
 /* ── Panels & chips ── */
 .pyth-module .pth-panel {
   background: #fff;
