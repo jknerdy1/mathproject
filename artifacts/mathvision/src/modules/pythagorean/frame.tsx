@@ -38,6 +38,7 @@ export default function PythagoreanModule() {
   const [step, setStep] = useState(0);
   const [nextVisible, setNextVisible] = useState(false);
   const [backVisible, setBackVisible] = useState(false);
+  const [hover, setHover] = useState<number | null>(null);
   const navRef = useRef<SectionNav>({});
   const reduce = useReducedMotion();
 
@@ -89,16 +90,32 @@ export default function PythagoreanModule() {
         </div>
       </header>
 
-      {/* ── Subtle progress dots, top-right ── */}
+      {/* ── Clickable progress dots, top-right ── */}
       {total > 0 && (
         <div className="pyth-dots pyth-dots--top" aria-label={`Step ${step + 1} of ${total}`}>
           {SECTIONS.map((s, i) => (
-            <span
+            <motion.button
               key={s.id}
+              layout
+              type="button"
               title={s.title}
+              aria-label={`Go to ${s.title}`}
+              aria-current={i === step ? "step" : undefined}
               className={`pyth-dot ${
                 i === step ? "pyth-dot--active" : i < step ? "pyth-dot--done" : ""
               }`}
+              onClick={() => {
+                setNextVisible(false);
+                setBackVisible(false);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                setStep(i);
+              }}
+              onMouseEnter={() => setHover(i)}
+              onMouseLeave={() => setHover(null)}
+              onFocus={() => setHover(i)}
+              onBlur={() => setHover(null)}
+              animate={{ width: hover === i ? (i === step ? 24 : 18) : i === step ? 22 : 8 }}
+              transition={{ type: "spring", stiffness: 340, damping: 24 }}
             />
           ))}
         </div>

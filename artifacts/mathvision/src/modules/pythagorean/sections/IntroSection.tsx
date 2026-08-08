@@ -426,7 +426,7 @@ export default function IntroSection({
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: "18px",
+                    gap: "10px",
                   }}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -451,7 +451,7 @@ export default function IntroSection({
                     <div className="eq-line">
                       <Eq displayMode={false}>a^2 + b^2 = c^2</Eq>
                     </div>
-                    <div className="eq-line" style={{ marginTop: "10px" }}>
+                    <div className="eq-line">
                       <span className="eq-num">{a.toFixed(1)}</span>
                       <span className="eq-sym">²</span> +
                       <span className="eq-num">{b.toFixed(1)}</span>
@@ -461,7 +461,7 @@ export default function IntroSection({
                     </div>
                     <div
                       className="eq-line"
-                      style={{ fontSize: "1.05rem", marginTop: "6px" }}
+                      style={{ fontSize: "1.05rem", marginTop: "3px" }}
                     >
                       <span className="eq-num">{(a * a).toFixed(1)}</span> +
                       <span className="eq-num">{(b * b).toFixed(1)}</span> =

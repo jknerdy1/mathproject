@@ -125,8 +125,15 @@
   width: 8px;
   height: 8px;
   border-radius: 999px;
+  border: none;
+  padding: 0;
   background: var(--pth-mist);
-  transition: width 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pyth-module .pyth-dot:hover {
+  background: var(--pth-horizon);
 }
 
 .pyth-module .pyth-dot--done {
@@ -210,8 +217,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 30px;
-  padding: 96px 24px 132px;
+  gap: 18px;
+  padding: 56px 20px 88px;
   background: #143371;
   color: #ecedf1;
 }
@@ -220,7 +227,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 22px;
+  gap: 14px;
   max-width: 860px;
   text-align: center;
 }
@@ -244,9 +251,9 @@
 
 .pyth-module .pyth-intro .intro-prose {
   color: #ecedf1;
-  font-size: clamp(1.15rem, 2.6vw, 1.7rem);
-  line-height: 1.6;
-  max-width: 800px;
+  font-size: clamp(1.05rem, 2.3vw, 1.45rem);
+  line-height: 1.55;
+  max-width: 780px;
 }
 
 .pyth-module .pyth-intro .intro-muted {
@@ -255,17 +262,20 @@
 
 .pyth-module .pyth-intro .intro-stage {
   width: 100%;
-  max-width: 640px;
+  max-width: 460px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 12px;
 }
 
 .pyth-module .pyth-intro .intro-svg {
-  width: 100%;
+  width: auto;
   height: auto;
+  max-width: 100%;
+  max-height: 36vh;
   display: block;
+  margin: 0 auto;
   touch-action: none;
   user-select: none;
 }
@@ -286,7 +296,7 @@
 .pyth-module .pyth-intro .intro-readouts {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 8px;
   justify-content: center;
 }
 
@@ -294,16 +304,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 1px;
   background: rgba(255, 255, 255, 0.06);
   border: 1.5px solid var(--pth-mist);
   border-radius: 12px;
-  padding: 8px 18px;
-  min-width: 84px;
+  padding: 5px 12px;
+  min-width: 70px;
 }
 
 .pyth-module .pyth-intro .readout__label {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   color: #92b1cf;
@@ -311,7 +321,7 @@
 
 .pyth-module .pyth-intro .readout__value {
   font-family: "Spline Sans Mono", ui-monospace, monospace;
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: #4691ce;
 }
@@ -320,7 +330,7 @@
   background: rgba(255, 255, 255, 0.06);
   border: 1.5px solid var(--pth-mist);
   border-radius: 14px;
-  padding: 18px 30px;
+  padding: 12px 22px;
   text-align: center;
 }
 
@@ -658,6 +668,455 @@
 
 .pyth-module .pyth-dist .dist-eqpanel .pth-eq .katex {
   color: #ecedf1;
+}
+
+/* ── Rectangular prism diagonal section (dark) ── */
+.pyth-module .pyth-prism {
+  width: 100%;
+  min-height: 100dvh;
+  background: #143371;
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-prism .prism-content {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 96px 24px 132px;
+}
+
+.pyth-module .pyth-prism .prism-text {
+  max-width: 760px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pyth-module .pyth-prism .prism-prose {
+  color: #ecedf1;
+  font-size: clamp(1.1rem, 2.4vw, 1.55rem);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.pyth-module .pyth-prism .prism-text .pth-eq .katex {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-prism .prism-callback {
+  color: #92b1cf;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.pyth-module .pyth-prism .prism-callback .pth-eq .katex {
+  color: #92b1cf;
+}
+
+.pyth-module .pyth-prism .prism-eq {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 6px 0 0;
+}
+
+.pyth-module .pyth-prism .prism-eq .pth-eq .katex {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-prism .prism-merge {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+}
+
+.pyth-module .pyth-prism .prism-merge .pmerge {
+  white-space: nowrap;
+}
+
+.pyth-module .pyth-prism .prism-stage {
+  width: 100%;
+  max-width: 460px;
+}
+
+.pyth-module .pyth-prism .prism-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: none;
+  user-select: none;
+}
+
+/* ── 3D distance formula section (dark) ── */
+.pyth-module .pyth-3dspace {
+  width: 100%;
+  min-height: 100dvh;
+  background: #143371;
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-3dspace .space-content {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: 96px 24px 132px;
+}
+
+.pyth-module .pyth-3dspace .space-text {
+  max-width: 780px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pyth-module .pyth-3dspace .space-prose {
+  color: #ecedf1;
+  font-size: clamp(1.1rem, 2.4vw, 1.55rem);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.pyth-module .pyth-3dspace .space-prompt {
+  color: #92b1cf;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.pyth-module .pyth-3dspace .space-text .pth-eq .katex {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-3dspace .space-eq {
+  color: #ecedf1;
+  margin-top: 4px;
+}
+
+.pyth-module .pyth-3dspace .space-eq .pth-eq .katex {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-3dspace .space-eq--dim .pth-eq .katex {
+  opacity: 0.6;
+}
+
+.pyth-module .pyth-3dspace .space-stage {
+  width: 100%;
+  max-width: 460px;
+}
+
+.pyth-module .pyth-3dspace .space-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: none;
+  user-select: none;
+}
+
+/* ── Circle formula section (dark) ── */
+.pyth-module .pyth-circle {
+  width: 100%;
+  min-height: 100dvh;
+  background: #143371;
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-circle .cc-content {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 96px 24px 132px;
+}
+
+.pyth-module .pyth-circle .cc-text {
+  max-width: 800px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.pyth-module .pyth-circle .cc-title {
+  font-family: var(--pth-display);
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4.6vw, 2.9rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #ecedf1;
+  margin: 0;
+}
+
+.pyth-module .pyth-circle .cc-prose {
+  color: #ecedf1;
+  font-size: clamp(1.1rem, 2.4vw, 1.55rem);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.pyth-module .pyth-circle .cc-text .pth-eq .katex {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-circle .cc-eq {
+  color: #ecedf1;
+  text-align: center;
+}
+
+.pyth-module .pyth-circle .cc-eq .pth-eq .katex {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-circle .cc-stage {
+  width: 100%;
+  max-width: 560px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid var(--pth-mist);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.pyth-module .pyth-circle .cc-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: none;
+  user-select: none;
+}
+
+.pyth-module .pyth-circle .cc-align {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.pyth-module .pyth-circle .eq-align {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  column-gap: 12px;
+  row-gap: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+.pyth-module .pyth-circle .ea-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  color: #ecedf1;
+  font-size: clamp(1.2rem, 2.6vw, 1.7rem);
+}
+
+.pyth-module .pyth-circle .ea-cell .pth-eq .katex {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-circle .ea-row1 { grid-row: 1; }
+.pyth-module .pyth-circle .ea-row2 { grid-row: 2; }
+.pyth-module .pyth-circle .ea-row3 { grid-row: 3; }
+.pyth-module .pyth-circle .ea-col1 { grid-column: 1; }
+.pyth-module .pyth-circle .ea-col2 { grid-column: 2; }
+.pyth-module .pyth-circle .ea-col3 { grid-column: 3; }
+.pyth-module .pyth-circle .ea-col4 { grid-column: 4; }
+.pyth-module .pyth-circle .ea-col5 { grid-column: 5; }
+
+/* ── Sphere equation section (dark) ── */
+.pyth-module .pyth-sphere {
+  width: 100%;
+  min-height: 100dvh;
+  background: #143371;
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-sphere .sp-content {
+  width: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 96px 24px 132px;
+}
+
+.pyth-module .pyth-sphere .sp-text {
+  max-width: 800px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pyth-module .pyth-sphere .sp-title {
+  font-family: var(--pth-display);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 4.4vw, 2.7rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #ecedf1;
+  margin: 0;
+}
+
+.pyth-module .pyth-sphere .sp-prose {
+  color: #ecedf1;
+  font-size: clamp(1.1rem, 2.4vw, 1.55rem);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.pyth-module .pyth-sphere .sp-prose--muted {
+  color: #92b1cf;
+  font-size: 0.98rem;
+}
+
+.pyth-module .pyth-sphere .sp-closing {
+  color: #92b1cf;
+  font-family: var(--pth-display);
+  font-size: clamp(1.2rem, 2.6vw, 1.7rem);
+  margin: 0;
+}
+
+.pyth-module .pyth-sphere .sp-text .pth-eq .katex {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-sphere .sp-stage {
+  width: 100%;
+  max-width: 420px;
+}
+
+.pyth-module .pyth-sphere .sp-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  touch-action: none;
+  user-select: none;
+}
+
+.pyth-module .pyth-sphere .sp-eq {
+  text-align: center;
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-sphere .sp-eq .pth-eq .katex {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-sphere .sp-compare {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.pyth-module .pyth-sphere .sp-line {
+  text-align: center;
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-sphere .sp-line .pth-eq .katex {
+  color: #ecedf1;
+}
+
+.pyth-module .pyth-sphere .sp-line--dim .pth-eq .katex {
+  color: #92b1cf;
+  opacity: 0.75;
+}
+
+.pyth-module .pyth-sphere .sp-brackets {
+  display: flex;
+  justify-content: center;
+  gap: 26%;
+  width: 100%;
+}
+
+.pyth-module .pyth-sphere .sp-new {
+  margin-top: 2px;
+}
+
+.pyth-module .pyth-sphere .sp-new-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #4691ce;
+  color: #143371;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Closing section (reuses dark Intro scene styles) ── */
+.pyth-module .pyth-close {
+  /* inherits .pyth-intro layout + dark background */
+}
+
+.pyth-module .pyth-close .close-final {
+  font-family: var(--pth-display);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 5vw, 3.2rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #ecedf1;
+  max-width: 880px;
+  text-align: center;
+  margin: 0;
+}
+
+.pyth-module .pyth-close .pyth-close-homewrap {
+  position: fixed;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+}
+
+.pyth-module .pyth-close .pyth-close-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 30px;
+  border-radius: 999px;
+  background: #1d52ac;
+  color: #ecedf1;
+  font-family: var(--pth-body);
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  box-shadow: 0 8px 22px rgba(20, 51, 113, 0.35);
+  transition: background-color 0.16s ease, transform 0.16s ease;
+  cursor: pointer;
+}
+
+.pyth-module .pyth-close .pyth-close-home:hover {
+  background: #4691ce;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .pyth-module .pyth-close .pyth-close-homewrap {
+    bottom: 26px;
+  }
 }
 
 /* ── Algebraic proof section ── */
