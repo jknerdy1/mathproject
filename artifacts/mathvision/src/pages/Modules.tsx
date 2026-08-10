@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { SiteNav } from "@/components/SiteNav";
 
@@ -115,16 +115,7 @@ function PlaceholderTile({ index }: { index: number }) {
   );
 }
 
-const MOCK_LESSONS_COMPLETED = 4_218;
-
 export default function Modules() {
-  const [, navigate] = useLocation();
-
-  const handleSurprise = () => {
-    const pick = MODULES[Math.floor(Math.random() * MODULES.length)];
-    if (pick) navigate(pick.href);
-  };
-
   return (
     <div
       className="modules-page"
@@ -140,80 +131,8 @@ export default function Modules() {
       <div style={{ position: "relative", zIndex: 1 }}>
         <SiteNav />
 
-        {/* ── Full-width separator between hero and modules ── */}
-        <hr
-          style={{
-            border: "none",
-            borderTop: "1.5px solid var(--site-border)",
-            margin: "30px",
-          }}
-        />
-
         <div style={{ position: "relative" }}>
-          <main style={{ maxWidth: "1400px", margin: "0 auto", padding: "56px 24px 96px" }}>
-
-          {/* ── Hero ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
-            style={{ textAlign: "center", marginBottom: "40px" }}
-          >
-            {/* Tagline */}
-            <p style={{ fontSize: "clamp(1rem, 2.5vw, 1.2rem)", fontWeight: 500, color: "var(--site-text-muted)", letterSpacing: "-0.01em", marginBottom: "16px" }}>
-              interactive math for curious students
-            </p>
-
-            {/* Controls row: mock stat + Surprise me */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "16px", flexWrap: "wrap" }}>
-              {/* Mock engagement counter */}
-              <span
-                style={{
-                  fontSize: "0.78rem",
-                  fontWeight: 600,
-                  color: "var(--site-text-muted)",
-                  letterSpacing: "0.01em",
-                  opacity: 0.7,
-                }}
-              >
-                ✦ {MOCK_LESSONS_COMPLETED.toLocaleString()} concepts explored
-              </span>
-
-              {/* Separator dot */}
-              <span style={{ color: "var(--site-border)", fontSize: "0.6rem" }}>●</span>
-
-              {/* Surprise me pill */}
-              <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ duration: 0.14 }}
-                onClick={handleSurprise}
-                style={{
-                  background: "transparent",
-                  border: "1.5px solid var(--site-border)",
-                  borderRadius: "999px",
-                  padding: "5px 16px",
-                  fontSize: "0.78rem",
-                  fontWeight: 700,
-                  color: "var(--site-text-muted)",
-                  cursor: "pointer",
-                  fontFamily: "'Space Grotesk', sans-serif",
-                  letterSpacing: "-0.01em",
-                  transition: "border-color 0.15s, color 0.15s",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "var(--site-text)";
-                  e.currentTarget.style.color = "var(--site-text)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "var(--site-border)";
-                  e.currentTarget.style.color = "var(--site-text-muted)";
-                }}
-              >
-                Surprise me ✦
-              </motion.button>
-            </div>
-          </motion.div>
+          <main style={{ maxWidth: "1400px", margin: "0 auto", padding: "32px 24px 96px" }}>
 
           {/* ── Module grid ── */}
           <div
