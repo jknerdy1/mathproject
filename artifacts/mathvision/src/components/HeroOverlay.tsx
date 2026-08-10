@@ -523,57 +523,55 @@ const FOREST: { ridge: Tree[]; slope: Tree[]; mid: Tree[]; near: Tree[] } = (() 
       ),
     );
 
-    // ── Mid ground — medium trees in tight, well-separated clumps with real gaps
-    //    of open hill between them, standing at varied depths on the lower ground.
-    //    Moderate detail (visible trunks).
-    const midClusters = [
-      { x: 60, baseY: 690, r: 80, n: 11 },
-      { x: 170, baseY: 745, r: 70, n: 9 },
-      { x: 470, baseY: 690, r: 75, n: 9 },
-      { x: 985, baseY: 688, r: 82, n: 11 },
-      { x: 1210, baseY: 745, r: 72, n: 9 },
-      { x: 1380, baseY: 690, r: 76, n: 9 },
-    ];
-    mid.push(
-      ...clusterTrees(
-        midClusters,
-        (x, y, h, f, t, o, canopy) => ({ x, y, h, w: h * 0.5, foliage: f, trunk: t, op: o, canopy: false }),
-        "#263a22",
-        "#3a2b1b",
-        58,
-        96,
-      ),
-    );
+    // ── Mid ground — medium trees with visible trunks, standing as distinct
+            //    clusters on the lower hill/ground, with real gaps and a centre clearing.
+            const midClusters = [
+              { x: 60, baseY: 585, r: 80, n: 11 },
+              { x: 180, baseY: 628, r: 70, n: 9 },
+              { x: 470, baseY: 592, r: 75, n: 9 },
+              { x: 985, baseY: 590, r: 82, n: 11 },
+              { x: 1210, baseY: 626, r: 72, n: 9 },
+              { x: 1380, baseY: 593, r: 76, n: 9 },
+            ];
+            mid.push(
+              ...clusterTrees(
+                midClusters,
+                (x, y, h, f, t, o, canopy) => ({ x, y, h, w: h * 0.5, foliage: f, trunk: t, op: o, canopy: false }),
+                "#263a22",
+                "#4a3322",
+                56,
+                92,
+              ),
+            );
 
-  // ── Near foreground — largest, most detailed trees framing the clearing.
-  //    Clusters are pushed toward the flanks and edges so the open ground is a
-  //    perspective wedge: wide at the bottom (viewer), narrowing toward the
-  //    hill. Front layer is darkest + most saturated.
-  const nearClusters = [
-    { x: 40, baseY: 810, r: 150, n: 16 },
-    { x: 220, baseY: 840, r: 130, n: 13 },
-    { x: 1320, baseY: 840, r: 140, n: 15 },
-    { x: 1400, baseY: 830, r: 130, n: 13 },
-  ];
-  near.push(
-    ...clusterTrees(
-      nearClusters,
-      (x, y, h, f, t, o, canopy) => ({ x, y, h, w: h * 0.5, foliage: f, trunk: t, op: o, canopy: false }),
-      "#2d4b26",
-      "#4a3622",
-      110,
-      170,
-    ),
-  );
+          // ── Near foreground — largest trees with clear trunks, framing the clearing.
+          //    Pushed toward the flanks/edges so a perspective ground wedge opens at the
+          //    bottom and tapers to the hill, all standing on the visible dark ground.
+          const nearClusters = [
+            { x: 90, baseY: 640, r: 105, n: 13 },
+            { x: 225, baseY: 672, r: 90, n: 11 },
+            { x: 1335, baseY: 672, r: 95, n: 12 },
+            { x: 1405, baseY: 644, r: 95, n: 11 },
+          ];
+          near.push(
+            ...clusterTrees(
+              nearClusters,
+              (x, y, h, f, t, o, canopy) => ({ x, y, h, w: h * 0.5, foliage: f, trunk: t, op: o, canopy: false }),
+              "#2d4b26",
+              "#5a4426",
+              95,
+              150,
+            ),
+          );
 
-  return { ridge, slope, mid, near };
-})();
+      return { ridge, slope, mid, near };
+    })();
 
-function trunkPath(x: number, y: number, h: number, w: number): string {
-  const trunkH = h * 0.26;
-  const trunkW = w * 0.18;
-  return `M${x - trunkW} ${y} L${x + trunkW} ${y} L${x + trunkW * 0.7} ${y - trunkH} L${x - trunkW * 0.7} ${y - trunkH} Z`;
-}
+    function trunkPath(x: number, y: number, h: number, w: number): string {
+      const trunkH = h * 0.3;
+      const trunkW = w * 0.3;
+      return `M${x - trunkW} ${y} L${x + trunkW} ${y} L${x + trunkW * 0.7} ${y - trunkH} L${x - trunkW * 0.7} ${y - trunkH} Z`;
+    }
 
 // `pineTier` (drooping frond) drives the foreground `DetailedPine` accents;
 // `pineFoliagePath` (stepped nested triangles) draws every background tree so
@@ -621,9 +619,9 @@ type PineAccent = { x: number; baseY: number; h: number; warm: "left" | "right" 
 // Scaled up + brought closer to read as clearly foreground-most, larger and
 // more detailed than any other tree in the scene.
 const PINE_ACCENTS: PineAccent[] = [
-  { x: 150, baseY: 812, h: 300, warm: "right" },
-  { x: 342, baseY: 838, h: 214, warm: "right" },
-  { x: 1358, baseY: 820, h: 272, warm: "left" },
+  { x: 150, baseY: 690, h: 300, warm: "right" },
+  { x: 305, baseY: 706, h: 220, warm: "right" },
+  { x: 1358, baseY: 698, h: 272, warm: "left" },
 ];
 
 // A single layered pine frond tier. Rich enough to read as needle clumps: the
@@ -997,14 +995,15 @@ export default function HeroOverlay() {
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }}
         >
           <defs>
-                      {/* Ground gradient: opaque dark from the (taller) hill line down
-                          past every tree base, then fading to transparent so it dissolves
-                          into the cream grid below. */}
-                      <linearGradient id="siteGround" gradientUnits="userSpaceOnUse" x1="0" y1="480" x2="0" y2="760">
-                        <stop offset="0" stopColor={C.silhouette} stopOpacity="1" />
-                        <stop offset="0.66" stopColor={C.silhouette} stopOpacity="1" />
-                        <stop offset="1" stopColor={C.silhouette} stopOpacity="0" />
-                      </linearGradient>
+                      {/* Ground gradient: opaque dark from the (taller) hill line down past every
+                                                tree base, holding a solid dark ground band, then fading to
+                                                transparent only at the very bottom so it dissolves into the
+                                                cream grid below. */}
+                                            <linearGradient id="siteGround" gradientUnits="userSpaceOnUse" x1="0" y1="480" x2="0" y2="860">
+                                              <stop offset="0" stopColor={C.silhouette} stopOpacity="1" />
+                                              <stop offset="0.82" stopColor={C.silhouette} stopOpacity="1" />
+                                              <stop offset="1" stopColor={C.silhouette} stopOpacity="0" />
+                                            </linearGradient>
                       {/* Soft halo around the brightest stars. */}
                                                                   <radialGradient id="starGlow">
                                                                     <stop offset="0%" stopColor="#fff8ea" stopOpacity="0.9" />
@@ -1074,21 +1073,21 @@ export default function HeroOverlay() {
                     )}
         </svg>
 
-        {/* ── Bottom cream blend: guarantees the ground dissolves into the
-            cream grid, regardless of how the SVG is center-cropped on wide
-            screens (this overlay lives in container space, not SVG space). ── */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: "30%",
-            zIndex: 2,
-            pointerEvents: "none",
-            background: "linear-gradient(to top, var(--site-bg) 0%, var(--site-bg) 38%, rgba(255, 241, 231, 0) 100%)",
-          }}
-        />
+        {/* ── Bottom cream blend: a narrow strip that dissolves the very bottom of the
+                    dark ground into the cream grid below. Kept thin so the foreground
+                    trees and their ground stay clearly visible above it. ── */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    height: "12%",
+                    zIndex: 2,
+                    pointerEvents: "none",
+                    background: "linear-gradient(to top, var(--site-bg) 0%, var(--site-bg) 20%, rgba(255, 241, 231, 0) 100%)",
+                  }}
+                />
 
         {/* Layer 3 — big animated foreground campfire (fastest) */}
         {reduceMotion ? (
