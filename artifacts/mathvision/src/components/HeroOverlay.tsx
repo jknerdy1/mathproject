@@ -27,7 +27,7 @@ const C = {
 };
 
 const SKY_GRADIENT =
-  "linear-gradient(to bottom, #06081c 0%, #12173f 20%, #372c55 40%, #9a6570 55%, #eab98d 70%, var(--site-bg) 85%, var(--site-bg) 100%)";
+  "linear-gradient(to bottom, #04030e 0%, #070a1f 4%, #0a0e2c 8%, #0e143c 12%, #131a4c 16%, #182251 20%, #1e2a58 25%, #253363 30%, #2d3d6e 35%, #36466f 40%, #40496c 45%, #4a4a63 50%, #525257 55%, #59572f 60%, #7a673f 68%, #a88446 76%, #d1a35a 84%, var(--site-bg) 96%, var(--site-bg) 100%)";
 
 const SVG_W = 1440;
 const SVG_H = 900;
@@ -46,28 +46,246 @@ function mulberry32(seed: number) {
 
 const rand = mulberry32(20260808);
 
-// --- Stars (some twinkle) ----------------------------------------------
-type Star = { x: number; y: number; r: number; o: number; tw: boolean; ph: number };
-const STARS: Star[] = [];
-for (let i = 0; i < 110; i++) {
-  const y = rand() * 560;
-  const fade = y < 320 ? 1 : Math.max(0.15, 1 - (y - 320) / 220);
-  STARS.push({
-    x: rand() * SVG_W,
-    y,
-    r: 0.6 + rand() * 1.4,
-    o: (0.4 + rand() * 0.5) * fade,
-    tw: rand() < 0.34,
-    ph: rand(),
-  });
+// ---------------------------------------------------------------------------
+// Stars & Milky Way
+//
+// A single deterministic Catmull-Rom centerline drives BOTH the rendered
+// Milky Way band (a true tapering ribbon via a variable-half-width filled
+// path, layered core/gradient strokes for internal brightness, and dark dust
+// lanes) AND the star-density field — so the densest stars sit exactly where
+// the band is, exactly like a real night sky. Field stars vary in size,
+// brightness and colour temperature; a handful of brightest ones carry a soft
+// glow dot; and faint background stars fill the "empty" areas so nothing reads
+// as dead negative space.
+// ---------------------------------------------------------------------------
+type Star = {
+  x: number;
+  y: number;
+  r: number;
+  o: number;
+  tw: boolean;
+  ph: number;
+  c: string;
+  glow: boolean;
+};
+
+const STAR_COLORS = [
+  "#ffffff",
+  "#ffffff",
+  "#ffffff",
+  "#ffffff",
+  "#fff3dd",
+  "#ffe2b0",
+  "#d9e4ff",
+  "#cfe0ff",
+];
+function starColor(): string {
+  return STAR_COLORS[Math.floor(rand() * STAR_COLORS.length)];
 }
 
-// --- Nested galaxy (three ellipses, one inside another) ----------------
-const GALAXY = [
-  { cx: 560, cy: 210, rx: 300, ry: 96, rot: -16, o: 0.16 },
-  { cx: 570, cy: 205, rx: 188, ry: 60, rot: -12, o: 0.2 },
-  { cx: 580, cy: 200, rx: 96, ry: 32, rot: -8, o: 0.28 },
+// Milky Way centerline control points (smooth arc across the upper sky).
+const MW_CTRL = [
+  { x: 20, y: 320 },
+  { x: 140, y: 245 },
+  { x: 320, y: 172 },
+  { x: 520, y: 136 },
+  { x: 740, y: 120 },
+  { x: 950, y: 152 },
+  { x: 1160, y: 230 },
+  { x: 1340, y: 342 },
 ];
+
+// Catmull-Rom spline sampled into a dense polyline (used for the band path AND
+// distance queries so star density follows the band).
+function catmullSample(ctrl: { x: number; y: number }[], stepsPer = 24): { x: number; y: number }[] {
+  const pts: { x: number; y: number }[] = [];
+  for (let i = 0; i < ctrl.length - 1; i++) {
+    const p0 = ctrl[Math.max(0, i - 1)];
+    const p1 = ctrl[i];
+    const p2 = ctrl[i + 1];
+    const p3 = ctrl[Math.min(ctrl.length - 1, i + 2)];
+    for (let s = 0; s < stepsPer; s++) {
+      const t = s / stepsPer;
+      const t2 = t * t;
+      const t3 = t2 * t;
+      pts.push({
+        x:
+          0.5 *
+          (2 * p1.x +
+            (-p0.x + p2.x) * t +
+            (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 +
+            (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3),
+        y:
+          0.5 *
+          (2 * p1.y +
+            (-p0.y + p2.y) * t +
+            (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 +
+            (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3),
+      });
+    }
+  }
+  const last = ctrl[ctrl.length - 1];
+  pts.push({ x: last.x, y: last.y });
+  return pts;
+}
+const MW_POLY = catmullSample(MW_CTRL);
+
+// Variable half-width along the band: pinched ends, fattest near the core.
+function mwHalfW(t: number, peak: number, base: number): number {
+  const fade = Math.pow(Math.sin(Math.min(1, Math.max(0, t)) * Math.PI), 1.15);
+  return base + fade * peak;
+}
+
+// Build a closed ribbon path whose half-width varies along a centerline —
+// gives the band its real taper (thickens and thins along its length).
+function buildRibbon(
+  pts: { x: number; y: number }[],
+  halfW: (t: number) => number,
+): string {
+  const n = pts.length;
+  const top: [number, number][] = [];
+  const bot: [number, number][] = [];
+  for (let i = 0; i < n; i++) {
+    const p = pts[i];
+    const a = pts[Math.max(0, i - 1)];
+    const b = pts[Math.min(n - 1, i + 1)];
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const L = Math.hypot(dx, dy) || 1;
+    const nx = -dy / L;
+    const ny = dx / L;
+    const w = halfW(i / (n - 1));
+    top.push([p.x + nx * w, p.y + ny * w]);
+    bot.push([p.x - nx * w, p.y - ny * w]);
+  }
+  const topS = top
+    .map((p, i) => `${i === 0 ? "M" : "L"}${p[0].toFixed(1)} ${p[1].toFixed(1)}`)
+    .join(" ");
+  const botS = bot
+    .slice()
+    .reverse()
+    .map((p) => `L${p[0].toFixed(1)} ${p[1].toFixed(1)}`)
+    .join(" ");
+  return `${topS} ${botS} Z`;
+}
+
+// Offset the polyline perpendicular to itself by a signed distance (for dust
+// lanes running alongside the band).
+function offsetPoly(pts: { x: number; y: number }[], dist: number): { x: number; y: number }[] {
+  const out: { x: number; y: number }[] = [];
+  const n = pts.length;
+  for (let i = 0; i < n; i++) {
+    const p = pts[i];
+    const a = pts[Math.max(0, i - 1)];
+    const b = pts[Math.min(n - 1, i + 1)];
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const L = Math.hypot(dx, dy) || 1;
+    out.push({ x: p.x + (-dy / L) * dist, y: p.y + (dx / L) * dist });
+  }
+  return out;
+}
+
+// Distance from a point to the band polyline (for star-density falloff).
+function distToPoly(px: number, py: number, pts: { x: number; y: number }[]): number {
+  let best = Infinity;
+  for (let i = 1; i < pts.length; i++) {
+    const A = pts[i - 1];
+    const B = pts[i];
+    const abx = B.x - A.x;
+    const aby = B.y - A.y;
+    const len2 = abx * abx + aby * aby || 1;
+    let t = ((px - A.x) * abx + (py - A.y) * aby) / len2;
+    t = Math.max(0, Math.min(1, t));
+    const cx = A.x + abx * t;
+    const cy = A.y + aby * t;
+    const d = Math.hypot(px - cx, py - cy);
+    if (d < best) best = d;
+  }
+  return best;
+}
+
+// --- Rendered Milky Way geometry ----------------------------------------
+// Layered ribbons (haze, inner, warm core) + dark dust lanes + bright knots.
+const MW_HAZE = buildRibbon(MW_POLY, (t) => mwHalfW(t, 92, 26));
+const MW_INNER = buildRibbon(MW_POLY, (t) => mwHalfW(t, 58, 14));
+const MW_CORE = buildRibbon(MW_POLY, (t) => mwHalfW(t, 30, 6));
+// Dust lanes — offset curves running through/along the band, drawn dark.
+const MW_DUST_A = buildRibbon(offsetPoly(MW_POLY, 34), () => 9);
+const MW_DUST_B = buildRibbon(offsetPoly(MW_POLY, -20), () => 6);
+// Bright knots (warm where the core is densest).
+const MW_KNOTS: { cx: number; cy: number; r: number }[] = [
+  { cx: 560, cy: 150, r: 34 },
+  { cx: 720, cy: 150, r: 26 },
+  { cx: 930, cy: 200, r: 30 },
+  { cx: 320, cy: 210, r: 22 },
+];
+
+// --- Star generation (density-aware) -----------------------------------
+const FIELD_STARS: Star[] = (() => {
+  const out: Star[] = [];
+  for (let i = 0; i < 200; i++) {
+    const x = rand() * SVG_W;
+    const y = rand() * 560;
+    // Fade stars out toward the horizon (below ~y320).
+    const fade = y < 320 ? 1 : Math.max(0.12, 1 - (y - 320) / 240);
+    // Kelly-star boost near the band (denser), dim elsewhere.
+    const d = distToPoly(x, y, MW_POLY);
+    const bandBoost = Math.max(0.35, 1 - d / 160);
+    const o = (0.28 + rand() * 0.55) * fade * (0.7 + 0.5 * bandBoost);
+    out.push({
+      x,
+      y,
+      r: 0.5 + rand() * 1.7,
+      o,
+      tw: rand() < 0.3,
+      ph: rand(),
+      c: starColor(),
+      glow: o > 0.68 && Math.hypot(x - 740, y - 200) > 180 && rand() < 0.5,
+    });
+  }
+  return out;
+})();
+
+// Bright prominent stars sprinkling over the whole upper sky.
+const LUMINARIES: Star[] = (() => {
+  const out: Star[] = [];
+  for (let i = 0; i < 26; i++) {
+    const x = rand() * SVG_W;
+    const y = 40 + rand() * 300;
+    out.push({
+      x,
+      y,
+      r: 1.6 + rand() * 1.6,
+      o: 0.75 + rand() * 0.25,
+      tw: rand() < 0.4,
+      ph: rand(),
+      c: starColor(),
+      glow: true,
+    });
+  }
+  return out;
+})();
+
+// Very-faint background stars scattered even in the "empty" areas.
+const FAINT_STARS: Star[] = (() => {
+  const out: Star[] = [];
+  for (let i = 0; i < 150; i++) {
+    const x = rand() * SVG_W;
+    const y = rand() * 520;
+    out.push({
+      x,
+      y,
+      r: 0.35 + rand() * 0.5,
+      o: 0.14 + rand() * 0.22,
+      tw: false,
+      ph: 0,
+      c: starColor(),
+      glow: false,
+    });
+  }
+  return out;
+})();
 
 // --- Horizon silhouette (taller, more mountainous), ground fades out -----
 // The crest is built from cubic-bezier segments so the same segments power
@@ -148,28 +366,44 @@ const FOREST: { far: Tree[]; mid: Tree[]; near: Tree[] } = (() => {
   const mid: Tree[] = [];
   const near: Tree[] = [];
 
-  // Far treeline — many small dark trees hugging the ridge on both flanks
-  // (drawn behind the hills, so only their tops peek over the crest), plus a
-  // sparse scattering across the center crest so the title stays clean.
-  for (const x of [...spreadX(LEFT_X[0], LEFT_X[1], 16, 0.3), ...spreadX(RIGHT_X[0], RIGHT_X[1], 16, 0.3)]) {
-    const h = 16 + rand() * 24;
-    far.push(mk(x, crestY(x) + 6 + rand() * 8, h, h < 28 ? "#0f150b" : "#171f10", "#1e1812", 0.9));
+  // Far treeline — a genuinely dense, packed band of small dark treetops that
+  // tucks behind the ridge so only their tops crest the hills. Many simple
+  // shapes at tight spacing read as "forest," not as distinct trees. Runs the
+  // full width (slightly sparser near the center crest so the title stays
+  // airy, never cluttered).
+  const farXs = [
+    ...spreadX(LEFT_X[0], LEFT_X[1], 40, 0.9),
+    ...spreadX(RIGHT_X[0], RIGHT_X[1], 42, 0.9),
+    ...spreadX(486, 954, 16, 0.9),
+  ];
+  for (const x of farXs) {
+    const h = 14 + rand() * 30;
+    far.push(mk(x, crestY(x) + 4 + rand() * 6, h, h < 28 ? "#0c120a" : "#141c0e", "#1c1711", 0.92));
   }
-  for (const x of spreadX(500, 940, 6, 0.3)) {
-    const h = 16 + rand() * 24;
-    far.push(mk(x, crestY(x) + 6 + rand() * 8, h, h < 28 ? "#0f150b" : "#171f10", "#1e1812", 0.9));
+  // A second, slightly wider far sub-band offset to fill the gaps so the ridge
+  // line reads as one continuous textured mass, not a row of separate trees.
+  for (const x of farXs) {
+    const h = 10 + rand() * 20;
+    far.push(mk(x + (rand() - 0.5) * 26, crestY(x) + 2 + rand() * 5, h, h < 20 ? "#0a1008" : "#10180b", "#181510", 0.95));
   }
 
-  // Mid band — on the visible slopes (flanks only), moderate greens.
-  for (const x of [...spreadX(LEFT_X[0], LEFT_X[1], 8, 0.3), ...spreadX(RIGHT_X[0], RIGHT_X[1], 8, 0.3)]) {
-    const h = 56 + rand() * 42;
-    mid.push(mk(x, crestY(x) + 18 + rand() * 26, h, h < 80 ? "#1f311e" : "#263c24", "#3a2b1b"));
+  // Mid band — on the visible slopes, moderate warm greens, packed tightly.
+  for (const x of [
+    ...spreadX(LEFT_X[0], LEFT_X[1], 20, 0.8),
+    ...spreadX(RIGHT_X[0], RIGHT_X[1], 20, 0.8),
+    ...spreadX(440, 1000, 10, 0.8),
+  ]) {
+    const h = 52 + rand() * 46;
+    mid.push(mk(x, crestY(x) + 16 + rand() * 22, h, h < 82 ? "#1d2f1c" : "#24391f", "#3a2b1b"));
   }
-  // Near/foreground — tallest, greenest, on solid lower ground (flanks only).
-  for (const x of [...spreadX(LEFT_X[0], LEFT_X[1], 5, 0.3), ...spreadX(RIGHT_X[0], RIGHT_X[1], 5, 0.3)]) {
-    const h = 104 + rand() * 48;
-    near.push(mk(x, crestY(x) + 50 + rand() * 40, h, h < 132 ? "#2c4627" : "#33542b", "#4a3622"));
+
+  // Near/foreground — tallest, greenest, on solid lower ground, densest at the
+  // flanks framing the fire so the scene feels enclosed by forest.
+  for (const x of [...spreadX(LEFT_X[0], LEFT_X[1], 10, 0.7), ...spreadX(RIGHT_X[0], RIGHT_X[1], 11, 0.7)]) {
+    const h = 100 + rand() * 54;
+    near.push(mk(x, crestY(x) + 46 + rand() * 36, h, h < 132 ? "#2a4424" : "#315027", "#4a3622"));
   }
+
   return { far, mid, near };
 })();
 
@@ -196,51 +430,157 @@ function treeEl(t: Tree, key: number) {
   );
 }
 
-function StarField({ reduceMotion, bgY }: { reduceMotion: boolean; bgY: any }) {
-  const wayEls = GALAXY.map((m, i) => (
-    <ellipse
-      key={i}
-      cx={m.cx}
-      cy={m.cy}
-      rx={m.rx}
-      ry={m.ry}
-      fill="#cfd6ff"
-      opacity={m.o}
-      transform={`rotate(${m.rot} ${m.cx} ${m.cy})`}
-    />
-  ));
+// --- Detailed foreground pines (accent trees) --------------------------
+// Two pines stand close to the fire on its left, one on the far right. Unlike
+// the distant treeline (which is all packed silhouettes), these have a visible
+// trunk and layered frond tiers, and they carry warm firelight on the side
+// that faces the campfire — leaning the scene forward and catching the glow.
+// warm='right' means the fire is to the tree's right (trees left of the fire).
 
-  const starEls = STARS.map((s, i) => {
-    if (reduceMotion || !s.tw) {
-      return <circle key={i} cx={s.x} cy={s.y} r={s.r} fill="#ffffff" opacity={s.o} />;
-    }
-    const dur = 1.8 + s.ph * 2.4;
-    return (
+type PineAccent = { x: number; baseY: number; h: number; warm: "left" | "right" };
+const PINE_ACCENTS: PineAccent[] = [
+  { x: 176, baseY: 596, h: 210, warm: "right" },
+  { x: 318, baseY: 626, h: 150, warm: "right" },
+  { x: 1340, baseY: 600, h: 200, warm: "left" },
+];
+
+// A single layered pine frond tier (drooping outer tiers).
+function pineTier(cx: number, topY: number, halfW: number, depth: number) {
+  const drp = depth * 0.9;
+  return `M${cx} ${topY}
+    C ${cx + halfW * 0.25} ${topY + drp * 0.3}, ${cx + halfW * 0.55} ${topY + drp * 0.55}, ${cx + halfW} ${topY + drp}
+    L ${cx - halfW} ${topY + drp}
+    C ${cx - halfW * 0.55} ${topY + drp * 0.55}, ${cx - halfW * 0.25} ${topY + drp * 0.3}, ${cx} ${topY}
+    Z`;
+}
+
+function DetailedPine({ x, baseY, h, warm }: PineAccent) {
+  const tiers = 5;
+  const tierH = (h * 0.74) / tiers;
+  const topY = baseY - h;
+  const wide = h * 0.4;
+  const trunkTop = baseY - h * 0.28;
+  const warmSide = warm === "right";
+  const uid = `pine${Math.round(x)}`;
+  const fireId = `pineFire${Math.round(x)}`;
+
+  const tierPaths = [];
+  for (let i = 0; i < tiers; i++) {
+    const ty = topY + i * tierH;
+    const halfW = wide * (0.32 + (i / (tiers - 1)) * 0.68);
+    const depth = (i / (tiers - 1)) * 0.6 + 0.55;
+    tierPaths.push(pineTier(x, ty, halfW, tierH * depth));
+  }
+
+  // Firelight falloff angle: fire is to the right for the left-of-fire pines,
+  // to the left for the far-right pine. The gradient is a horizontal sweep so
+  // warmth strengthens toward the fire edge of the canopy.
+  const fireRect = warmSide ? x - wide * 0.9 : x - wide * 0.1;
+
+  return (
+    <g>
+      <defs>
+        <linearGradient id={fireId} x1={warmSide ? 1 : 0} y1={0} x2={warmSide ? 0 : 1} y2={0}>
+                  <stop offset="0%" stopColor="#ff8a34" stopOpacity={0.85} />
+                  <stop offset="40%" stopColor="#ffa04e" stopOpacity={0.4} />
+                  <stop offset="80%" stopColor="#ffa04e" stopOpacity={0.1} />
+                  <stop offset="100%" stopColor="#ffa04e" stopOpacity={0} />
+                </linearGradient>
+        <clipPath id={uid}>
+          {tierPaths.map((d, i) => (
+            <path key={i} d={d} />
+          ))}
+        </clipPath>
+      </defs>
+      {/* Trunk */}
+      <path
+        d={`M${x - wide * 0.05} ${baseY} L${x + wide * 0.05} ${baseY} L${x + wide * 0.028} ${trunkTop} L${x - wide * 0.028} ${trunkTop} Z`}
+        fill={warmSide ? "#4a3523" : "#3d2d1e"}
+      />
+      {/* Foliage tiers: dark shadow pass, then the lit layered pass on top */}
+      {tierPaths.map((d, i) => (
+        <path key={`s${i}`} d={d} fill={warmSide ? "#162a15" : "#0e1f0f"} />
+      ))}
+      {tierPaths.map((d, i) => (
+        <path
+          key={`l${i}`}
+          d={d}
+          fill={warmSide ? "#2d5126" : "#23401e"}
+          stroke={warmSide ? "#3d6a2e" : "#2f5523"}
+          strokeWidth={0.7}
+          opacity={i === 0 ? 0.92 : 0.85}
+        />
+      ))}
+      {/* Warm firelight, confined to the canopy silhouette */}
+      <g clipPath={`url(#${uid})`}>
+        <rect x={fireRect} y={topY} width={wide} height={h} fill={`url(#${fireId})`} />
+      </g>
+    </g>
+  );
+}
+
+function StarField({ reduceMotion, bgY }: { reduceMotion: boolean; bgY: any }) {
+  // Layered Milky Way band: haze -> inner -> warm core -> dark dust lanes.
+  const milkyWay = (
+    <g>
+      <path d={MW_HAZE} fill="#aeb8ff" opacity={0.10} />
+      <path d={MW_INNER} fill="#c9ccf6" opacity={0.10} />
+      <path d={MW_CORE} fill="#ffd9a8" opacity={0.10} />
+      <path d={MW_DUST_A} fill="#0a0d1e" opacity={0.45} />
+      <path d={MW_DUST_B} fill="#0a0d1e" opacity={0.4} />
+      {MW_KNOTS.map((k, i) => (
+        <ellipse key={`k${i}`} cx={k.cx} cy={k.cy} rx={k.r} ry={k.r * 0.45} fill="#ffe4bd" opacity={0.35} transform={`rotate(-68 ${k.cx} ${k.cy})`} />
+      ))}
+    </g>
+  );
+
+  // A single star: optional soft glow halo + colored core dot, with twinkle.
+  const renderStar = (s: Star, i: number): React.ReactNode => {
+    const core = s.tw && !reduceMotion ? (
       <motion.circle
         key={i}
         cx={s.x}
         cy={s.y}
         r={s.r}
-        fill="#ffffff"
+        fill={s.c}
         initial={{ opacity: s.o }}
-        animate={{ opacity: [s.o, s.o * 0.2, s.o] }}
-        transition={{ duration: dur, delay: s.ph * dur, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ opacity: [s.o, s.o * 0.25, s.o] }}
+        transition={{ duration: 1.8 + s.ph * 2.4, delay: s.ph * 2.4, repeat: Infinity, ease: "easeInOut" }}
       />
+    ) : (
+      <circle key={i} cx={s.x} cy={s.y} r={s.r} fill={s.c} opacity={s.o} />
     );
-  });
+    if (s.glow) {
+      return (
+        <g key={`g${i}`}>
+          <circle cx={s.x} cy={s.y} r={s.r * 4.2} fill="url(#starGlow)" opacity={s.o * 0.55} />
+          {core}
+        </g>
+      );
+    }
+    return core;
+  };
+
+  const faintEls = FAINT_STARS.map(renderStar);
+  const fieldEls = FIELD_STARS.map(renderStar);
+  const lumiEls = LUMINARIES.map(renderStar);
 
   if (reduceMotion) {
     return (
       <g>
-        {wayEls}
-        {starEls}
+        {milkyWay}
+        {faintEls}
+        {fieldEls}
+        {lumiEls}
       </g>
     );
   }
   return (
     <motion.g style={{ y: bgY }}>
-      {wayEls}
-      {starEls}
+      {milkyWay}
+      {faintEls}
+      {fieldEls}
+      {lumiEls}
     </motion.g>
   );
 }
@@ -274,11 +614,26 @@ const EMBERS: Ember[] = [
   { x: 86, delay: 1.6, dur: 2.4, dist: 95, r: 2.4 },
 ];
 
-function flicker(path: React.ReactNode, reduce: boolean, amplitude: number, duration: number, delay: number) {
+function flicker(
+  path: React.ReactNode,
+  reduce: boolean,
+  amplitude: number,
+  duration: number,
+  delay: number,
+  sway = 0,
+) {
   if (reduce) return path;
+  // Real flames both breathe (vertical) and sway side-to-side as air moves past
+  // them. Each layer gets its own sway amount and timing so the flame leans/recovers
+  // irregularly — like responding to shifting air — rather than pulsing in place.
+  const hasSway = sway > 0;
+  const animate: any = hasSway
+    ? { y: [0, -amplitude, 0], x: [0, sway, 0, -sway * 0.7, 0], rotate: [0, sway * 0.62, 0, -sway * 0.5, 0] }
+    : { y: [0, -amplitude, 0] };
   return (
     <motion.g
-      animate={{ y: [0, -amplitude, 0] }}
+      style={{ transformBox: "fill-box", transformOrigin: "50% 100%" }}
+      animate={animate}
       transition={{ duration, delay, repeat: Infinity, ease: "easeInOut" }}
     >
       {path}
@@ -345,9 +700,9 @@ function Campfire({ reduceMotion }: { reduceMotion: boolean }) {
 
   const flames = (
     <>
-      {flicker(<path d={OUTER_FLAME} fill={C.fireOuter} opacity={0.95} />, reduceMotion, 6, 3.6, 0)}
-      {flicker(<path d={INNER_FLAME} fill={C.fireInner} opacity={0.98} />, reduceMotion, 8, 2.9, 0.6)}
-      {flicker(<path d={CORE_FLAME} fill={C.fireCore} />, reduceMotion, 5, 2.2, 1.1)}
+      {flicker(<path d={OUTER_FLAME} fill={C.fireOuter} opacity={0.95} />, reduceMotion, 6, 4.2, 0, 6)}
+            {flicker(<path d={INNER_FLAME} fill={C.fireInner} opacity={0.98} />, reduceMotion, 8, 3.4, 0.6, 4.5)}
+            {flicker(<path d={CORE_FLAME} fill={C.fireCore} />, reduceMotion, 5, 2.6, 1.1, 2.8)}
     </>
   );
 
@@ -454,15 +809,21 @@ export default function HeroOverlay() {
           style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" }}
         >
           <defs>
-            {/* Ground gradient: opaque dark from the (taller) hill line down
-                past every tree base, then fading to transparent so it dissolves
-                into the cream grid below. */}
-            <linearGradient id="siteGround" gradientUnits="userSpaceOnUse" x1="0" y1="480" x2="0" y2="760">
-              <stop offset="0" stopColor={C.silhouette} stopOpacity="1" />
-              <stop offset="0.66" stopColor={C.silhouette} stopOpacity="1" />
-              <stop offset="1" stopColor={C.silhouette} stopOpacity="0" />
-            </linearGradient>
-          </defs>
+                      {/* Ground gradient: opaque dark from the (taller) hill line down
+                          past every tree base, then fading to transparent so it dissolves
+                          into the cream grid below. */}
+                      <linearGradient id="siteGround" gradientUnits="userSpaceOnUse" x1="0" y1="480" x2="0" y2="760">
+                        <stop offset="0" stopColor={C.silhouette} stopOpacity="1" />
+                        <stop offset="0.66" stopColor={C.silhouette} stopOpacity="1" />
+                        <stop offset="1" stopColor={C.silhouette} stopOpacity="0" />
+                      </linearGradient>
+                      {/* Soft halo around the brightest stars. */}
+                      <radialGradient id="starGlow">
+                        <stop offset="0%" stopColor="#fff8ea" stopOpacity="0.9" />
+                        <stop offset="55%" stopColor="#ffe9c6" stopOpacity="0.28" />
+                        <stop offset="100%" stopColor="#ffe9c6" stopOpacity="0" />
+                      </radialGradient>
+                    </defs>
 
           {/* Layer 1 — stars + galaxy + far treeline (slowest, drawn behind hills) */}
           <StarField reduceMotion={reduceMotion} bgY={bgY} />
@@ -485,12 +846,18 @@ export default function HeroOverlay() {
             </motion.g>
           )}
 
-          {/* Layer 3 — near/foreground trees (fastest, drawn on top) */}
-          {reduceMotion ? (
-            <g>{FOREST.near.map(treeEl)}</g>
-          ) : (
-            <motion.g style={{ y: fgY }}>{FOREST.near.map(treeEl)}</motion.g>
-          )}
+          {/* Layer 3 — near/foreground trees + accent pines (fastest, top) */}
+                    {reduceMotion ? (
+                      <g>
+                        {FOREST.near.map(treeEl)}
+                        {PINE_ACCENTS.map((p, i) => <DetailedPine key={`pine${i}`} {...p} />)}
+                      </g>
+                    ) : (
+                      <motion.g style={{ y: fgY }}>
+                        {FOREST.near.map(treeEl)}
+                        {PINE_ACCENTS.map((p, i) => <DetailedPine key={`pine${i}`} {...p} />)}
+                      </motion.g>
+                    )}
         </svg>
 
         {/* ── Bottom cream blend: guarantees the ground dissolves into the
