@@ -83,18 +83,19 @@ function starColor(): string {
   return STAR_COLORS[Math.floor(rand() * STAR_COLORS.length)];
 }
 
-// Milky Way centerline — a diagonal, gently wavy streak sitting in the
-// MID-UPPER sky (clear of the top edge), slightly off-center. Its polyline
-// drives BOTH the soft-blob band above AND the star-density field, so denser
-// stars sit exactly where the glow is.
+// Milky Way centerline — a modest diagonal streak starting at the horizon and
+// rising UP toward the upper-right with very little concavity (nearly straight),
+// not an arc and not spanning the full width. Its polyline drives BOTH the
+// soft-blob band above AND the star-density field, so denser stars sit exactly
+// where the glow is.
 const MW_CTRL = [
-  { x: 150, y: 372 },
-  { x: 330, y: 306 },
-  { x: 540, y: 260 },
-  { x: 750, y: 268 },
-  { x: 950, y: 312 },
-  { x: 1140, y: 356 },
-  { x: 1310, y: 392 },
+  { x: 300, y: 448 },
+  { x: 430, y: 416 },
+  { x: 570, y: 374 },
+  { x: 710, y: 330 },
+  { x: 860, y: 288 },
+  { x: 1010, y: 245 },
+  { x: 1130, y: 210 },
 ];
 
 // Catmull-Rom spline sampled into a dense polyline (used for the band's blob
@@ -178,75 +179,74 @@ function bandFade(i: number): number {
 const MW_BLOBS: MWBlob[] = (() => {
   const blobs: MWBlob[] = [];
   const n = MW_POLY.length;
-  // Base haze — pale blue-white + lavender, wide soft coverage.
-  for (let k = 0; k < 80; k++) {
+  // Base haze — pale grey-white + faint blue, small soft coverage.
+  for (let k = 0; k < 70; k++) {
     const i = Math.floor(mwRand() * n);
     const p = MW_POLY[i];
     const m = bandFade(i);
     blobs.push({
-      x: p.x + (mwRand() - 0.5) * 66,
-      y: p.y + (mwRand() - 0.5) * 44,
-      rx: 52 + m * 160 + mwRand() * 80,
-      ry: 18 + m * 58 + mwRand() * 26,
+      x: p.x + (mwRand() - 0.5) * 36,
+      y: p.y + (mwRand() - 0.5) * 22,
+      rx: 26 + m * 70 + mwRand() * 34,
+      ry: 10 + m * 26 + mwRand() * 12,
       rot: blobAngle(i),
-      g: mwRand() < 0.55 ? "url(#mwCool)" : "url(#mwLav)",
-      o: 0.5 + mwRand() * 0.35,
+      g: mwRand() < 0.6 ? "url(#mwCool)" : "url(#mwGrey)",
+      o: 0.1 + mwRand() * 0.12,
     });
   }
-  // Warm dust-tan, concentrated around the densest middle of the band.
-  for (let q = 0; q < 46; q++) {
-    const i = Math.floor((0.26 + mwRand() * 0.48) * (n - 1));
+  // Faint warm-tan, barely perceptible near the densest middle.
+  for (let q = 0; q < 34; q++) {
+    const i = Math.floor((0.28 + mwRand() * 0.44) * (n - 1));
     const p = MW_POLY[i];
     const m = bandFade(i);
     blobs.push({
-      x: p.x + (mwRand() - 0.5) * 56,
-      y: p.y + (mwRand() - 0.5) * 34,
-      rx: 40 + m * 128 + mwRand() * 62,
-      ry: 15 + m * 50 + mwRand() * 24,
+      x: p.x + (mwRand() - 0.5) * 30,
+      y: p.y + (mwRand() - 0.5) * 18,
+      rx: 20 + m * 52 + mwRand() * 26,
+      ry: 8 + m * 20 + mwRand() * 10,
       rot: blobAngle(i),
       g: "url(#mwWarm)",
-      o: 0.5 + mwRand() * 0.4,
+      o: 0.08 + mwRand() * 0.1,
     });
   }
-  // Pale lavender wisps scattered along the whole offset-streak.
-  for (let q = 0; q < 26; q++) {
+  // Faint lavender wisps scattered along the short streak.
+  for (let q = 0; q < 20; q++) {
     const i = Math.floor(mwRand() * n);
     const p = MW_POLY[i];
     const m = bandFade(i);
     blobs.push({
-      x: p.x + (mwRand() - 0.5) * 44,
-      y: p.y + (mwRand() - 0.5) * 32,
-      rx: 34 + m * 80 + mwRand() * 46,
-      ry: 13 + m * 36 + mwRand() * 18,
+      x: p.x + (mwRand() - 0.5) * 24,
+      y: p.y + (mwRand() - 0.5) * 16,
+      rx: 18 + m * 40 + mwRand() * 20,
+      ry: 7 + m * 16 + mwRand() * 8,
       rot: blobAngle(i),
       g: "url(#mwLav)",
-      o: 0.45 + mwRand() * 0.35,
+      o: 0.07 + mwRand() * 0.09,
     });
   }
-  // Small brighter warm/white knots (star-dense clumps) near the core.
-  for (let q = 0; q < 9; q++) {
+  // Small brighter grey-white knots (star-dense clumps) near the core.
+  for (let q = 0; q < 7; q++) {
     const i = Math.floor((0.34 + mwRand() * 0.32) * (n - 1));
     const p = MW_POLY[i];
     const m = bandFade(i);
     blobs.push({
-      x: p.x + (mwRand() - 0.5) * 28,
-      y: p.y + (mwRand() - 0.5) * 18,
-      rx: 14 + m * 34,
-      ry: 8 + m * 15,
+      x: p.x + (mwRand() - 0.5) * 14,
+      y: p.y + (mwRand() - 0.5) * 9,
+      rx: 8 + m * 16,
+      ry: 4 + m * 7,
       rot: blobAngle(i),
-      g: "url(#mwWarm)",
-      o: 0.85,
+      g: "url(#mwGrey)",
+      o: 0.16,
     });
   }
   return blobs;
 })();
 
-// Dark dust lanes — semi-transparent dark plum ribbons (30-40% opacity) running
-// through the band, offset from its centerline so they read as real dust
-// obscuring the starlight, not broad strokes on top.
+// Dark dust lanes — faint grey streaks (subtle) running through the band,
+// offset from its centerline so they read as dust obscuring the starlight.
 const MW_DUST: MWBlob[] = (() => {
   const out: MWBlob[] = [];
-  const laneOffs = [50, -42];
+  const laneOffs = [26, -20];
   laneOffs.forEach((off) => {
     const lane = MW_POLY.map((p, i) => {
       const a = MW_POLY[Math.max(0, i - 1)];
@@ -256,19 +256,19 @@ const MW_DUST: MWBlob[] = (() => {
       const L = Math.hypot(dx, dy) || 1;
       return { x: p.x + (-dy / L) * off, y: p.y + (dx / L) * off };
     });
-    for (let q = 0; q < 10; q++) {
+    for (let q = 0; q < 9; q++) {
       const i = Math.floor((0.18 + mwRand() * 0.64) * (lane.length - 1));
       const p = lane[i];
       const t = i / (lane.length - 1);
       const m = Math.pow(Math.sin(Math.min(1, Math.max(0, t)) * Math.PI), 0.7);
       out.push({
-        x: p.x + (mwRand() - 0.5) * 36,
-        y: p.y + (mwRand() - 0.5) * 26,
-        rx: 30 + m * 90,
-        ry: 7 + m * 16,
+        x: p.x + (mwRand() - 0.5) * 18,
+        y: p.y + (mwRand() - 0.5) * 13,
+        rx: 15 + m * 44,
+        ry: 4 + m * 8,
         rot: blobAngle(i),
         g: "url(#mwDust)",
-        o: 0.55 + mwRand() * 0.2,
+        o: 0.32 + mwRand() * 0.12,
       });
     }
   });
@@ -469,7 +469,7 @@ function clusterTrees(
   return out;
 }
 
-const FOREST: { ridge: Tree[]; slope: Tree[]; mid: Tree[]; near: Tree[] } = (() => {
+const FOREST: { ridge: Tree[]; slope: Tree[]; mid: Tree[] } = (() => {
   const mk = (x: number, y: number, h: number, foliage: string, trunk?: string, op?: number, canopy?: boolean): Tree => ({
     x,
     y,
@@ -484,98 +484,73 @@ const FOREST: { ridge: Tree[]; slope: Tree[]; mid: Tree[]; near: Tree[] } = (() 
   const ridge: Tree[] = [];
   const slope: Tree[] = [];
   const mid: Tree[] = [];
-  const near: Tree[] = [];
 
   // ── Ridge canopy — dense trunkless treetops tucked BELOW the crest, so the
-    //    hill's own fill hides their bodies and only the tips crest into the sky.
-    //    Two interleaved passes fill every gap → a solid forest silhouette.
-    for (const x of [
-      ...spreadX(0, 1440, 170, 1.6),
-      ...spreadX(0, 1440, 95, 1.2),
-    ]) {
-      const h = 18 + rand() * 20;
-      ridge.push(mk(x, crestY(x) + 8 + rand() * 8, h, "#1a2116", undefined, 0.95, true));
-    }
-    // Deeper second pass hugging just under the crest for continuity.
-    for (const x of spreadX(0, 1440, 130, 1.4)) {
-      const h = 22 + rand() * 24;
-      ridge.push(mk(x, crestY(x) + 4 + rand() * 6, h, "#141b10", undefined, 0.98, true));
-    }
+  //    hill's own fill hides their bodies and only the tips crest into the sky.
+  //    Halved from last round for a lighter, less crowded horizon.
+  for (const x of [
+    ...spreadX(0, 1440, 85, 1.6),
+    ...spreadX(0, 1440, 48, 1.2),
+  ]) {
+    const h = 18 + rand() * 20;
+    ridge.push(mk(x, crestY(x) + 8 + rand() * 8, h, "#1a2116", undefined, 0.95, true));
+  }
+  // A single deeper pass under the crest for continuity.
+  for (const x of spreadX(0, 1440, 65, 1.4)) {
+    const h = 22 + rand() * 24;
+    ridge.push(mk(x, crestY(x) + 4 + rand() * 6, h, "#141b10", undefined, 0.98, true));
+  }
 
-    // ── Hillside slope — small canopy-only trees cascading DOWN the visible hill
-    //    faces (lighter + more desaturated than mid, per atmospheric perspective).
-    const slopeClusters = [
-      { x: 90, baseY: 620, r: 85, n: 18 },
-      { x: 250, baseY: 660, r: 90, n: 20 },
-      { x: 400, baseY: 630, r: 80, n: 15 },
-      { x: 1120, baseY: 620, r: 85, n: 18 },
-      { x: 1250, baseY: 660, r: 90, n: 20 },
-      { x: 1380, baseY: 630, r: 80, n: 15 },
-    ];
-    slope.push(
-      ...clusterTrees(
-        slopeClusters,
-        (x, y, h, f, t, o, canopy) => ({ x, y, h, w: h * 0.5, foliage: f, trunk: t, op: o, canopy }),
-        "#3a4531",
-        undefined,
-        26,
-        54,
-      ),
-    );
+  // ── Hillside slope — small canopy-only trees cascading DOWN the visible hill
+  //    faces (lighter + more desaturated than mid, per atmospheric perspective).
+  const slopeClusters = [
+    { x: 90, baseY: 620, r: 85, n: 9 },
+    { x: 250, baseY: 660, r: 90, n: 10 },
+    { x: 400, baseY: 630, r: 80, n: 8 },
+    { x: 1120, baseY: 620, r: 85, n: 9 },
+    { x: 1250, baseY: 660, r: 90, n: 10 },
+    { x: 1380, baseY: 630, r: 80, n: 8 },
+  ];
+  slope.push(
+    ...clusterTrees(
+      slopeClusters,
+      (x, y, h, f, t, o, canopy) => ({ x, y, h, w: h * 0.5, foliage: f, trunk: t, op: o, canopy }),
+      "#3a4531",
+      undefined,
+      26,
+      54,
+    ),
+  );
 
-    // ── Mid ground — medium trees with visible trunks, standing as distinct
-            //    clusters on the lower hill/ground, with real gaps and a centre clearing.
-            const midClusters = [
-              { x: 60, baseY: 585, r: 80, n: 11 },
-              { x: 180, baseY: 628, r: 70, n: 9 },
-              { x: 470, baseY: 592, r: 75, n: 9 },
-              { x: 985, baseY: 590, r: 82, n: 11 },
-              { x: 1210, baseY: 626, r: 72, n: 9 },
-              { x: 1380, baseY: 593, r: 76, n: 9 },
-            ];
-            mid.push(
-              ...clusterTrees(
-                midClusters,
-                (x, y, h, f, t, o, canopy) => ({ x, y, h, w: h * 0.5, foliage: f, trunk: t, op: o, canopy: false }),
-                "#263a22",
-                "#4a3322",
-                56,
-                92,
-              ),
-            );
+  // ── Mid ground — a few medium trees with visible trunks in loose clusters,
+  //    leaving a wide centre clearing.
+  const midClusters = [
+    { x: 60, baseY: 585, r: 80, n: 6 },
+    { x: 180, baseY: 628, r: 70, n: 5 },
+    { x: 470, baseY: 592, r: 75, n: 5 },
+    { x: 985, baseY: 590, r: 82, n: 6 },
+    { x: 1210, baseY: 626, r: 72, n: 5 },
+    { x: 1380, baseY: 593, r: 76, n: 5 },
+  ];
+  mid.push(
+    ...clusterTrees(
+      midClusters,
+      (x, y, h, f, t, o, canopy) => ({ x, y, h, w: h * 0.5, foliage: f, trunk: t, op: o, canopy: false }),
+      "#263a22",
+      "#4a3322",
+      56,
+      92,
+    ),
+  );
 
-          // ── Near foreground — largest trees with clear trunks, framing the clearing.
-          //    Pushed toward the flanks/edges so a perspective ground wedge opens at the
-          //    bottom and tapers to the hill, all standing on the visible dark ground.
-          const nearClusters = [
-            { x: 90, baseY: 640, r: 105, n: 13 },
-            { x: 225, baseY: 672, r: 90, n: 11 },
-            { x: 1335, baseY: 672, r: 95, n: 12 },
-            { x: 1405, baseY: 644, r: 95, n: 11 },
-          ];
-          near.push(
-            ...clusterTrees(
-              nearClusters,
-              (x, y, h, f, t, o, canopy) => ({ x, y, h, w: h * 0.5, foliage: f, trunk: t, op: o, canopy: false }),
-              "#2d4b26",
-              "#5a4426",
-              95,
-              150,
-            ),
-          );
+  return { ridge, slope, mid };
+})();
 
-      return { ridge, slope, mid, near };
-    })();
-
-    function trunkPath(x: number, y: number, h: number, w: number): string {
-      const trunkH = h * 0.3;
-      const trunkW = w * 0.3;
-      return `M${x - trunkW} ${y} L${x + trunkW} ${y} L${x + trunkW * 0.7} ${y - trunkH} L${x - trunkW * 0.7} ${y - trunkH} Z`;
-    }
-
-// `pineTier` (drooping frond) drives the foreground `DetailedPine` accents;
-// `pineFoliagePath` (stepped nested triangles) draws every background tree so
-// they read as layered pines at any size.
+function trunkPath(x: number, y: number, h: number, w: number): string {
+  const trunkH = h * 0.3;
+  const trunkW = w * 0.3;
+  return `M${x - trunkW} ${y} L${x + trunkW} ${y} L${x + trunkW * 0.7} ${y - trunkH} L${x - trunkW * 0.7} ${y - trunkH} Z`;
+}
 
 // Layered pine silhouette from N stepped tiers — unmistakably a pine at ANY
 // scale, just simpler/smaller at a distance, never a flat single triangle.
@@ -604,100 +579,6 @@ function treeEl(t: Tree, key: number) {
     <g key={key} opacity={t.op ?? 1}>
       {!t.canopy && t.trunk && <path d={trunkPath(t.x, t.y, t.h, t.w)} fill={t.trunk} />}
       <path d={pineFoliagePath(t.x, t.y, t.h, t.w, t.canopy ? 3 : 4, t.canopy ? 0 : 0.24)} fill={t.foliage} />
-    </g>
-  );
-}
-
-// --- Detailed foreground pines (accent trees) --------------------------
-// Two pines stand close to the fire on its left, one on the far right. Unlike
-// the distant treeline (which is all packed silhouettes), these have a visible
-// trunk and layered frond tiers, and they carry warm firelight on the side
-// that faces the campfire — leaning the scene forward and catching the glow.
-// warm='right' means the fire is to the tree's right (trees left of the fire).
-
-type PineAccent = { x: number; baseY: number; h: number; warm: "left" | "right" };
-// Scaled up + brought closer to read as clearly foreground-most, larger and
-// more detailed than any other tree in the scene.
-const PINE_ACCENTS: PineAccent[] = [
-  { x: 150, baseY: 690, h: 300, warm: "right" },
-  { x: 305, baseY: 706, h: 220, warm: "right" },
-  { x: 1358, baseY: 698, h: 272, warm: "left" },
-];
-
-// A single layered pine frond tier. Rich enough to read as needle clumps: the
-// main drooping triangle plus small outward-jutting frond bumps at its sides.
-function pineTier(cx: number, topY: number, halfW: number, depth: number) {
-  const drp = depth * 0.9;
-    const side = halfW * 0.22;
-    return `M${cx} ${topY}
-    C ${cx + halfW * 0.28} ${topY + drp * 0.34}, ${cx + halfW * 0.6} ${topY + drp * 0.6}, ${cx + halfW} ${topY + drp}
-    L ${cx + halfW + side} ${topY + drp + drp * 0.12}
-    L ${cx + halfW} ${topY + drp + drp * 0.05}
-    L ${cx - halfW} ${topY + drp + drp * 0.05}
-    L ${cx - halfW - side} ${topY + drp + drp * 0.12}
-    Z`;
-}
-
-function DetailedPine({ x, baseY, h, warm }: PineAccent) {
-  const tiers = 6;
-  const tierH = (h * 0.78) / tiers;
-  const topY = baseY - h;
-  const wide = h * 0.4;
-  const trunkTop = baseY - h * 0.3;
-  const warmSide = warm === "right";
-  const uid = `pine${Math.round(x)}`;
-  const rimId = `pineRim${Math.round(x)}`;
-
-  const tierPaths = [];
-  for (let i = 0; i < tiers; i++) {
-    const ty = topY + i * tierH;
-    const halfW = wide * (0.3 + (i / (tiers - 1)) * 0.7);
-    const depth = (i / (tiers - 1)) * 0.55 + 0.6;
-    tierPaths.push(pineTier(x, ty, halfW, tierH * depth));
-  }
-
-  // Soft rim-light: a radial gradient whose focus sits on the fire-facing edge
-  // and fades gradually across the canopy — a blurred, glowing edge rather than
-  // a hard flat recolour band.
-  const fireFocus = warmSide ? x + wide * 0.45 : x - wide * 0.45;
-
-  return (
-    <g>
-      <defs>
-        <radialGradient id={rimId} cx={warmSide ? "85%" : "15%"} cy="45%" r="75%">
-          <stop offset="0%" stopColor="#ff9d4d" stopOpacity="0.62" />
-          <stop offset="45%" stopColor="#ff8a34" stopOpacity="0.24" />
-          <stop offset="100%" stopColor="#ff8a34" stopOpacity="0" />
-        </radialGradient>
-        <clipPath id={uid}>
-          {tierPaths.map((d, i) => (
-            <path key={i} d={d} />
-          ))}
-        </clipPath>
-      </defs>
-      {/* Trunk */}
-      <path
-        d={`M${x - wide * 0.055} ${baseY} L${x + wide * 0.055} ${baseY} L${x + wide * 0.03} ${trunkTop} L${x - wide * 0.03} ${trunkTop} Z`}
-        fill={warmSide ? "#5a4030" : "#4a3523"}
-      />
-      {/* Foliage: dark shadow pass first, then lit layered pass on top */}
-      {tierPaths.map((d, i) => (
-        <path key={`s${i}`} d={d} fill={warmSide ? "#12260f" : "#0c1c0d"} />
-      ))}
-      {tierPaths.map((d, i) => (
-        <path
-          key={`l${i}`}
-          d={d}
-          fill={warmSide ? "#27421f" : "#1e3520"}
-          stroke={warmSide ? "#3d6829" : "#2e5422"}
-          strokeWidth={0.8}
-          opacity={i === 0 ? 0.94 : 0.86}
-        />
-      ))}
-      {/* Soft warm rim-light along the fire-facing edge, clipped to the tree */}
-      <g clipPath={`url(#${uid})`}>
-        <rect x={fireFocus - wide * 0.9} y={topY} width={wide * 1.8} height={h} fill={`url(#${rimId})`} />
-      </g>
     </g>
   );
 }
@@ -1011,30 +892,35 @@ export default function HeroOverlay() {
                                                                     <stop offset="100%" stopColor="#ffe9c6" stopOpacity="0" />
                                                                   </radialGradient>
                                                                   {/* Milky Way gradient blobs — each fades to transparent at its
-                                                                      own edge, so layered overlapping blobs produce soft mottled
-                                                                      texture with no visible primitives, while keeping warm vs cool
-                                                                      colour separation intact. */}
-                                                                  <radialGradient id="mwCool">
-                                                                    <stop offset="0%" stopColor="#d6e0ff" stopOpacity="0.9" />
-                                                                    <stop offset="55%" stopColor="#aeb9ee" stopOpacity="0.45" />
-                                                                    <stop offset="100%" stopColor="#9aa6e6" stopOpacity="0" />
-                                                                  </radialGradient>
-                                                                  <radialGradient id="mwWarm">
-                                                                    <stop offset="0%" stopColor="#ffe4b3" stopOpacity="0.9" />
-                                                                    <stop offset="50%" stopColor="#efc591" stopOpacity="0.5" />
-                                                                    <stop offset="100%" stopColor="#dfae86" stopOpacity="0" />
-                                                                  </radialGradient>
-                                                                  <radialGradient id="mwLav">
-                                                                    <stop offset="0%" stopColor="#e6dcfa" stopOpacity="0.85" />
-                                                                    <stop offset="55%" stopColor="#cbbcf0" stopOpacity="0.42" />
-                                                                    <stop offset="100%" stopColor="#c0b1e8" stopOpacity="0" />
-                                                                  </radialGradient>
-                                                                  <radialGradient id="mwDust">
-                                                                    <stop offset="0%" stopColor="#5a3345" stopOpacity="0.9" />
-                                                                    <stop offset="55%" stopColor="#46283a" stopOpacity="0.55" />
-                                                                    <stop offset="100%" stopColor="#3a2040" stopOpacity="0" />
-                                                                  </radialGradient>
-                                                                </defs>
+                                                                                                                                        own edge, so layered overlapping blobs produce soft mottled
+                                                                                                                                        texture with no visible primitives, while keeping warm vs cool
+                                                                                                                                        colour separation intact. */}
+                                                                                                                                    <radialGradient id="mwCool">
+                                                                                                                                      <stop offset="0%" stopColor="#e9ebf1" stopOpacity="0.5" />
+                                                                                                                                      <stop offset="55%" stopColor="#c7ccda" stopOpacity="0.2" />
+                                                                                                                                      <stop offset="100%" stopColor="#b9bfd2" stopOpacity="0" />
+                                                                                                                                    </radialGradient>
+                                                                                                                                    <radialGradient id="mwGrey">
+                                                                                                                                      <stop offset="0%" stopColor="#f2f2f2" stopOpacity="0.5" />
+                                                                                                                                      <stop offset="55%" stopColor="#d8d8da" stopOpacity="0.22" />
+                                                                                                                                      <stop offset="100%" stopColor="#cfcfd2" stopOpacity="0" />
+                                                                                                                                    </radialGradient>
+                                                                                                                                    <radialGradient id="mwWarm">
+                                                                                                                                      <stop offset="0%" stopColor="#efe6d0" stopOpacity="0.4" />
+                                                                                                                                      <stop offset="50%" stopColor="#e4d6bb" stopOpacity="0.16" />
+                                                                                                                                      <stop offset="100%" stopColor="#dccfb4" stopOpacity="0" />
+                                                                                                                                    </radialGradient>
+                                                                                                                                    <radialGradient id="mwLav">
+                                                                                                                                      <stop offset="0%" stopColor="#e2e0ec" stopOpacity="0.42" />
+                                                                                                                                      <stop offset="55%" stopColor="#d2d0e0" stopOpacity="0.18" />
+                                                                                                                                      <stop offset="100%" stopColor="#c9c7da" stopOpacity="0" />
+                                                                                                                                    </radialGradient>
+                                                                                                                                    <radialGradient id="mwDust">
+                                                                                                                                      <stop offset="0%" stopColor="#5f5a5c" stopOpacity="0.55" />
+                                                                                                                                      <stop offset="55%" stopColor="#4e4a4d" stopOpacity="0.3" />
+                                                                                                                                      <stop offset="100%" stopColor="#444147" stopOpacity="0" />
+                                                                                                                                    </radialGradient>
+                                                                                                                                  </defs>
 
           {/* Layer 1 — stars + ridge canopy treetops (slowest, behind hills) */}
                     <StarField reduceMotion={reduceMotion} bgY={bgY} />
@@ -1045,33 +931,20 @@ export default function HeroOverlay() {
                     )}
 
                     {/* Layer 2 — rolling hills + hillside slope trees + mid-ground clusters */}
-                    {reduceMotion ? (
-                      <g>
-                        <path d={HILL_PATH} fill="url(#siteGround)" />
-                        {FOREST.slope.map(treeEl)}
-                        {FOREST.mid.map(treeEl)}
-                      </g>
-                    ) : (
-                      <motion.g style={{ y: midY }}>
-                        <path d={HILL_PATH} fill="url(#siteGround)" />
-                        {FOREST.slope.map(treeEl)}
-                        {FOREST.mid.map(treeEl)}
-                      </motion.g>
-                    )}
-
-          {/* Layer 3 — near/foreground trees + accent pines (fastest, top) */}
-                    {reduceMotion ? (
-                      <g>
-                        {FOREST.near.map(treeEl)}
-                        {PINE_ACCENTS.map((p, i) => <DetailedPine key={`pine${i}`} {...p} />)}
-                      </g>
-                    ) : (
-                      <motion.g style={{ y: fgY }}>
-                        {FOREST.near.map(treeEl)}
-                        {PINE_ACCENTS.map((p, i) => <DetailedPine key={`pine${i}`} {...p} />)}
-                      </motion.g>
-                    )}
-        </svg>
+                                        {reduceMotion ? (
+                                          <g>
+                                            <path d={HILL_PATH} fill="url(#siteGround)" />
+                                            {FOREST.slope.map(treeEl)}
+                                            {FOREST.mid.map(treeEl)}
+                                          </g>
+                                        ) : (
+                                          <motion.g style={{ y: midY }}>
+                                            <path d={HILL_PATH} fill="url(#siteGround)" />
+                                            {FOREST.slope.map(treeEl)}
+                                            {FOREST.mid.map(treeEl)}
+                                          </motion.g>
+                                        )}
+                            </svg>
 
         {/* ── Bottom cream blend: a narrow strip that dissolves the very bottom of the
                     dark ground into the cream grid below. Kept thin so the foreground
