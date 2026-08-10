@@ -486,28 +486,31 @@ const FOREST: { ridge: Tree[]; slope: Tree[]; mid: Tree[]; near: Tree[] } = (() 
   const mid: Tree[] = [];
   const near: Tree[] = [];
 
-  // ── Ridge canopy — dense trunkless treetops hugging the crest, wrapped
-  //    around all three crest sections so the whole horizon reads as forest.
-  for (const x of [
-    ...spreadX(0, 1440, 160, 1.4),
-    ...spreadX(0, 1440, 90, 1.1),
-  ]) {
-    const h = 10 + rand() * 22;
-    ridge.push(mk(x, crestY(x) - 4 + rand() * 10, h, "#12160e", undefined, 0.95, true));
-  }
-  // A second deeper ridge band just below the crest crest, filled in.
-  for (const x of spreadX(0, 1440, 120, 1.3)) {
-    const h = 12 + rand() * 24;
-    ridge.push(mk(x, crestY(x) + 12 + rand() * 18, h, "#0e120b", undefined, 0.98, true));
-  }
+  // ── Ridge canopy — dense trunkless treetops tucked BELOW the crest, so the
+    //    hill's own fill hides their bodies and only the tips crest into the sky.
+    //    Two interleaved passes fill every gap → a solid forest silhouette.
+    for (const x of [
+      ...spreadX(0, 1440, 170, 1.6),
+      ...spreadX(0, 1440, 95, 1.2),
+    ]) {
+      const h = 18 + rand() * 20;
+      ridge.push(mk(x, crestY(x) + 8 + rand() * 8, h, "#1a2116", undefined, 0.95, true));
+    }
+    // Deeper second pass hugging just under the crest for continuity.
+    for (const x of spreadX(0, 1440, 130, 1.4)) {
+      const h = 22 + rand() * 24;
+      ridge.push(mk(x, crestY(x) + 4 + rand() * 6, h, "#141b10", undefined, 0.98, true));
+    }
 
-  // ── Hillside slope — small canopy-only trees cascading down the visible
-    //    slope (lighter + more desaturated than mid, per atmospheric perspective).
+    // ── Hillside slope — small canopy-only trees cascading DOWN the visible hill
+    //    faces (lighter + more desaturated than mid, per atmospheric perspective).
     const slopeClusters = [
-      { x: 95, baseY: 600, r: 90, n: 18 },
-      { x: 300, baseY: 612, r: 95, n: 20 },
-      { x: 1130, baseY: 600, r: 95, n: 20 },
-      { x: 1335, baseY: 612, r: 88, n: 18 },
+      { x: 90, baseY: 620, r: 85, n: 18 },
+      { x: 250, baseY: 660, r: 90, n: 20 },
+      { x: 400, baseY: 630, r: 80, n: 15 },
+      { x: 1120, baseY: 620, r: 85, n: 18 },
+      { x: 1250, baseY: 660, r: 90, n: 20 },
+      { x: 1380, baseY: 630, r: 80, n: 15 },
     ];
     slope.push(
       ...clusterTrees(
@@ -572,19 +575,37 @@ function trunkPath(x: number, y: number, h: number, w: number): string {
   return `M${x - trunkW} ${y} L${x + trunkW} ${y} L${x + trunkW * 0.7} ${y - trunkH} L${x - trunkW * 0.7} ${y - trunkH} Z`;
 }
 
-function foliagePath(x: number, y: number, h: number, w: number): string {
-  const trunkH = h * 0.26;
-  const colH = h - trunkH;
-  const upper = `M${x} ${y - trunkH - colH} L${x + w * 0.34} ${y - trunkH - colH * 0.42} L${x - w * 0.34} ${y - trunkH - colH * 0.42} Z`;
-  const lower = `M${x} ${y - trunkH - colH * 0.6} L${x + w * 0.56} ${y - trunkH} L${x - w * 0.56} ${y - trunkH} Z`;
-  return lower + upper;
+// `pineTier` (drooping frond) drives the foreground `DetailedPine` accents;
+// `pineFoliagePath` (stepped nested triangles) draws every background tree so
+// they read as layered pines at any size.
+
+// Layered pine silhouette from N stepped tiers — unmistakably a pine at ANY
+// scale, just simpler/smaller at a distance, never a flat single triangle.
+// Each tier is a nested triangle that visibly steps outward and downward, so
+// the layered silhouette shows even as a one-colour silhouette. Returns all
+// tier subpaths as one fillable path string. trunkFrac reserves the bottom
+// (canopy trees pass 0 so foliage spans the full height).
+function pineFoliagePath(x: number, y: number, h: number, w: number, tiers = 4, trunkFrac = 0.24): string {
+  const colTop = y - h;
+  const colBot = y - h * trunkFrac;
+  const colH = colBot - colTop;
+  const halfWmax = w * 0.5;
+  const parts: string[] = [];
+  for (let i = 0; i < tiers; i++) {
+    const f = i / (tiers - 1);
+    const apexY = colTop + f * colH * 0.34;
+    const baseY = colTop + colH * (0.42 + f * 0.58);
+    const halfW = halfWmax * (0.42 + 0.58 * f);
+    parts.push(`M${x} ${apexY.toFixed(1)} L${(x + halfW).toFixed(1)} ${baseY.toFixed(1)} L${(x - halfW).toFixed(1)} ${baseY.toFixed(1)} Z`);
+  }
+  return parts.join(" ");
 }
 
 function treeEl(t: Tree, key: number) {
   return (
     <g key={key} opacity={t.op ?? 1}>
       {!t.canopy && t.trunk && <path d={trunkPath(t.x, t.y, t.h, t.w)} fill={t.trunk} />}
-      <path d={foliagePath(t.x, t.y, t.h, t.w)} fill={t.foliage} />
+      <path d={pineFoliagePath(t.x, t.y, t.h, t.w, t.canopy ? 3 : 4, t.canopy ? 0 : 0.24)} fill={t.foliage} />
     </g>
   );
 }
